@@ -215,6 +215,24 @@ function dgu_site_feature_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -47,
   );
+  // Exported menu link: menu-interact:glossary
+  $menu_links['menu-interact:glossary'] = array(
+    'menu_name' => 'menu-interact',
+    'link_path' => 'glossary',
+    'router_path' => 'glossary',
+    'link_title' => 'Glossary',
+    'options' => array(
+      'attributes' => array(
+        'title' => 'Glossary of Public Sector Information and Open Data Terminology',
+      ),
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 0,
+  );
   // Exported menu link: menu-interact:library
   $menu_links['menu-interact:library'] = array(
     'menu_name' => 'menu-interact',
@@ -279,6 +297,7 @@ function dgu_site_feature_menu_default_menu_links() {
   t('Data');
   t('Data requests');
   t('Forum');
+  t('Glossary');
   t('Home');
   t('Library');
   t('Linked Data');
