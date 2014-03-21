@@ -4,6 +4,9 @@ api = 2
 ; Modules
 ; --------
 
+projects[bootstrap_tour][version] = "1.0-beta8"
+projects[bootstrap_tour][subdir] = "contrib"
+
 projects[apachesolr][type] = "module"
 projects[apachesolr][download][type] = "git"
 projects[apachesolr][download][url] = "http://git.drupal.org/project/apachesolr.git"
@@ -219,6 +222,9 @@ projects[flag][subdir] = "contrib"
 
 projects[session_api][version] = "1.0-rc1"
 projects[session_api][subdir] = "contrib"
+
+projects[emptyparagraphkiller][version] = "1.0-beta2"
+projects[emptyparagraphkiller][subdir] = "contrib"
 
 ; Themes
 ; --------
