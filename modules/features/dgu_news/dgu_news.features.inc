@@ -34,13 +34,13 @@ function dgu_news_views_api($module = NULL, $api = NULL) {
  */
 function dgu_news_node_info() {
   $items = array(
-    'article' => array(
-      'name' => t('Article'),
+    'news_article' => array(
+      'name' => t('News Article'),
       'base' => 'node_content',
-      'description' => t('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
+      'description' => t('A news article content type'),
       'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
+      'title_label' => t('Headline'),
+      'help' => t('Please do not write anything which could be considered offensive.'),
     ),
     'simplenews' => array(
       'name' => t('Newsletter issue'),
