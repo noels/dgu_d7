@@ -10,47 +10,45 @@
 function dgu_news_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-news_article-body'
-  $field_instances['node-news_article-body'] = array(
+  // Exported field_instance: 'node-news_article-field_file_attachments'
+  $field_instances['node-news_article-field_file_attachments'] = array(
     'bundle' => 'news_article',
-    'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Select an image to go with your news story.',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
-        'module' => 'text',
+        'label' => 'above',
+        'module' => 'file',
         'settings' => array(),
-        'type' => 'text_default',
+        'type' => 'file_default',
         'weight' => 5,
       ),
       'teaser' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'trim_length' => 600,
-        ),
-        'type' => 'text_summary_or_trimmed',
-        'weight' => 3,
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'body',
-    'label' => 'Body',
-    'required' => FALSE,
+    'field_name' => 'field_file_attachments',
+    'label' => 'File Attachments',
+    'required' => 0,
     'settings' => array(
-      'display_summary' => TRUE,
-      'text_processing' => 1,
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'txt',
+      'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'module' => 'text',
+      'active' => 1,
+      'module' => 'file',
       'settings' => array(
-        'rows' => 20,
-        'summary_rows' => 5,
+        'progress_indicator' => 'throbber',
       ),
-      'type' => 'text_textarea_with_summary',
-      'weight' => 31,
+      'type' => 'file_generic',
+      'weight' => 37,
     ),
   );
 
@@ -89,7 +87,7 @@ function dgu_news_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 1,
+      'weight' => 32,
     ),
   );
 
@@ -127,7 +125,7 @@ function dgu_news_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 2,
+      'weight' => 33,
     ),
   );
 
@@ -184,7 +182,7 @@ function dgu_news_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 3,
+      'weight' => 34,
     ),
   );
 
@@ -244,7 +242,7 @@ function dgu_news_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 0,
+      'weight' => 31,
     ),
   );
 
@@ -301,7 +299,7 @@ function dgu_news_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 4,
+      'weight' => 35,
     ),
   );
 
@@ -603,9 +601,11 @@ function dgu_news_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Body');
+  t('File Attachments');
   t('Newsletter');
   t('Recipient Handle Settings');
   t('Recipient Handler');
+  t('Select an image to go with your news story.');
   t('Sent subscriber count');
   t('Status');
 
