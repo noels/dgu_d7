@@ -1,0 +1,38 @@
+Administrator - Administrate the site feature
+News Publisher - Create/Publish/Moderate??? News articles
+News Moderator - Moderate/Un-Publish News articles
+Site User - View/Search/Share/Report/Archive??? News articles
+Site Visitor - View/Search/Share News Articles
+
+
+as a site visitor I want to easily navigate to the news landing page,
+when i am on the landing page.
+I would like to see a box in the center of the page listing the latest news stories.
+I would like to see other elements either side of the latest news stories.
+I would like to easily find and use a search box if I cant find what I am looking for on the landing page.
+I would like to be able to share news stories on my preferred social network.
+I would like to be offered the choice to become a site user.
+
+as a site user on the news landing page,
+I would like to see a link to report a news article if I think it is offensive.
+I would like to see an option for me to save a news article link to my profile for future reference.
+
+as a news moderator on the news landing page,
+I would like to see a list of news articles which I need to moderate,
+I would like the ability to moderate more than one news article at a time.
+I would like this same list of articles to appear in my user profile.
+I would tolerate a reminder sent to my email for each news article I need to moderate
+I would be impressed if once per day I received a single email containing multiple news entries I need to moderate.
+
+as a publisher on the news landing page,
+I would like to see a link to publish a new news article.
+I would like this link to be in my profile if I need it.
+I would like to see a list of the News Articles which I have published.
+I would like to see a list of News articles which i have published which have been reported.
+I would like to be able see a link any reported news articles so I can edit it.
+I would like to be able to see the any report details related to the article.
+
+as an administrator on the landing page,
+I would like to be able to create or promote a news publisher or news moderator user easily.
+I would like to be able to publish news articles if want
+I would like to see some statistics
