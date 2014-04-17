@@ -5,13 +5,11 @@ Site User - View/Search/Share/Report/Archive??? News articles
 Site Visitor - View/Search/Share News Articles
 
 
-as a site visitor I want to easily navigate to the news landing page,
-when i am on the landing page.
-I would like to see a box in the center of the page listing the latest news stories.
-I would like to see other elements either side of the latest news stories.
-I would like to easily find and use a search box if I cant find what I am looking for on the landing page.
-I would like to be able to share news stories on my preferred social network.
-I would like to be offered the choice to become a site user.
+As a site visitor I want to easily navigate to the news landing page so that I can read the latest happenings of the DGU team.
+As a site visitor I want to see a the latest news stories on the news landing page so that I can choose to read what interests me.
+As a site visitor I want to search for news stories so that I can find news about a specific topic.
+As a site visitor I want to share news stories on my preferred social network so that I can engage my social network in DGU team happenings.
+
 
 as a site user on the news landing page,
 I would like to see a link to report a news article if I think it is offensive.
