@@ -98,6 +98,7 @@ function dgu_search_dgu_search_form_content_type_render($subtype, $conf, $panel_
     $solrsort =  $search['sort'];
     $base_path = $search['path'];
 
+
     $query = apachesolr_drupal_query($name, $params, $solrsort, $base_path, $solr, $context);
 
     list($final_query, $response) = apachesolr_do_query($query);
@@ -124,7 +125,6 @@ function dgu_search_dgu_search_form_content_type_render($subtype, $conf, $panel_
   }
   $form_state['solrsort'] = $solrsort;
   $form_state['show_counter'] = $conf['show_counter'];
-  //print  "asdfasdfasf" . $conf['show_counter'];
   $form = drupal_build_form('dgu_search_form', $form_state);
 
   // Statcically cached keyword in dgu_search.module:dgu_search_apachesolr_query_prepare()
