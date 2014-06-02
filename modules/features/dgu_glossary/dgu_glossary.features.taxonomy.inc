@@ -12,7 +12,7 @@ function dgu_glossary_taxonomy_default_vocabularies() {
     'glossary' => array(
       'name' => 'Glossary',
       'machine_name' => 'glossary',
-      'description' => 'DGU Glossary',
+      'description' => 'Glossary of Public Sector Information and Open Data Terminology',
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
