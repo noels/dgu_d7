@@ -169,6 +169,8 @@ projects[ckan][download][type] = "git"
 projects[ckan][download][url] = "http://git.drupal.org/project/ckan.git"
 projects[ckan][download][branch] = "ckan_dgu_7.x-1.x"
 projects[ckan][subdir] = "contrib"
+projects[ckan][patch][] = "http://raw.github.com/datagovuk/dgu_d7/master/patches/redirect_module_remove_oops_message.patch"
+
 
 projects[composer_manager][version] = "1.0-beta7"
 projects[composer_manager][subdir] = "contrib"
