@@ -208,8 +208,51 @@ index 1ffb7b1..91e8715 100644
      $items['admin/structure/ckan_publisher'] = array(
        'title' => 'Publishers',
        'access arguments' => array('Administer CKAN'),
+diff --git a/ckan_publisher/ckan_publisher.install b/ckan_publisher/ckan_publisher.install
+index 26a56be..867f453 100644
+--- a/ckan_publisher/ckan_publisher.install
++++ b/ckan_publisher/ckan_publisher.install
+@@ -80,6 +80,36 @@ function ckan_publisher_schema() {
+       'ckan_id' => array('ckan_id'),
+     ),
+   );
++  $schema['ckan_organogram'] = array(
++    'description' => 'The CKAN Publisher organogram dates.',
++    'fields' => array(
++      'id' => array(
++        'description' => 'Drupal id for a CKAN Publisher to which this organogram relates.',
++        'type' => 'int',
++        'unsigned' => TRUE,
++        'not null' => TRUE,
++      ),
++      'fid' => array(
++        'description' => 'CKAN GUID',
++        'type' => 'int',
++        'length' => 36,
++        'unsigned' => TRUE,
++        'not null' => TRUE,
++      ),
++      'deadline_date' => array(
++        'description' => 'The Unix timestamp of the Publish date for this organogram.',
++        'type' => 'int',
++        'not null' => TRUE,
++        'default' => 0,
++      ),
++    ),
++  );
+ 
+   return $schema;
+-}
+\ No newline at end of file
++}
++
++
++function ckan_publisher_update_1001() {
++  $schema = module_invoke('ckan_publisher', 'schema');
++  db_create_table('ckan_organogram', $schema['ckan_organogram']);
++}
 diff --git a/ckan_publisher/ckan_publisher.module b/ckan_publisher/ckan_publisher.module
-index 3c408b1..a4ec54a 100644
+index 3c408b1..f5197d4 100644
 --- a/ckan_publisher/ckan_publisher.module
 +++ b/ckan_publisher/ckan_publisher.module
 @@ -17,10 +17,20 @@ function ckan_publisher_entity_info() {
@@ -293,7 +336,7 @@ index 3c408b1..a4ec54a 100644
   * CKAN Publisher settings form constructor.
   */
  function ckan_publisher_structure_page () {
-@@ -224,9 +286,219 @@ function ckan_publisher_theme() {
+@@ -224,9 +286,252 @@ function ckan_publisher_theme() {
        'render element' => 'elements',
        'template' => 'ckan_publisher',
      ),
@@ -343,6 +386,12 @@ index 3c408b1..a4ec54a 100644
 +  $form['#validate'] = array('ckan_publisher_form_validate');
 +  $form['#submit'] = array('ckan_publisher_form_submit');
 +  $form['#suffix'] = theme('organogram_preview');
++
++  $db = Database::getConnection();
++  $result = db_query("SELECT fid, deadline_date FROM ckan_organogram where id = " . $ckan_publisher->id );
++  $dates = $result->fetchAllKeyed();
++  $form_state['organogram_dates'] = $dates;
++
 +  drupal_add_css(drupal_get_path('module', 'ckan_publisher') . '/css/ckan_publisher.css',
 +      array('group' => CSS_THEME, 'every_page' => TRUE));
 +  drupal_add_js(drupal_get_path('module', 'ckan_publisher') . '/js/d3.v3.js');
@@ -430,6 +479,12 @@ index 3c408b1..a4ec54a 100644
 +        hide($widget[$sub_key]);
 +        $operations_elements[] = &$widget[$sub_key];
 +      }
++      $deadline_dates = array();
++      if (isset($widget[$sub_key]['#type']) && ($widget[$sub_key]['#type'] == 'deadline_date' )){
++        $widget[$sub_key]['#type'] = 'textfield';
++        hide($widget[$sub_key]);
++        $deadline_dates[] = &$widget[$sub_key];
++      }
 +    }
 +
 +    // Delay rendering of the "Display" option and the weight selector, so that
@@ -489,6 +544,7 @@ index 3c408b1..a4ec54a 100644
 +      'class' => array('js-organogram-preview-btn', 'form-submit'),
 +      'data-organogram-file' => $element['#file']->fid,
 +    );
++    $element['filename']['#markup'] .= "<span class='deadline_date'>". date('d-m-Y', $form_state['organogram_dates'][$element['#file']->fid]?:0) . "<span>";
 +    $btnName = "preview_organogram_{$element['#language']}_{$element['#delta']}_button";
 +    $element['preview'] = array(
 +      '#name' => $btnName,
@@ -502,6 +558,26 @@ index 3c408b1..a4ec54a 100644
 +    );
 +    //finally remove the form-control class put on by the bootstrap module which is unaware of managed_files
 +    $element['#attributes']['class'] = array_filter($element['#attributes']['class'], '_ckan_publisher_remove_form_control');
++  } else {
++    $today = getdate();
++    $next_year = $today['year'] + 1;
++    if ($today['mon'] <= 3){
++      $date1 = new DateTime("${today['year']}-03-31");
++      $date2 = new DateTime("${today['year']}-09-30");
++    } else if ($today['mon'] <= 9){
++      $date1 = new DateTime("${today['year']}-09-30");
++      $date2 = new DateTime("${next_year}-03-31");
++    } else {
++      $date1 = new DateTime("${nextyear}-09-30");
++    }
++    $dates = array($date1->format('d-m-Y'), $date2->format('d-m-Y'));
++
++    $element['date_picker'] = array(
++      '#label' => 'Choose date',
++      '#type' => 'select',
++      '#options' => $dates,
++      '#default_value' => $dates[0],
++    );
 +  }
 +  return $element;
 +}
