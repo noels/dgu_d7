@@ -252,7 +252,7 @@ index 26a56be..867f453 100644
 +  db_create_table('ckan_organogram', $schema['ckan_organogram']);
 +}
 diff --git a/ckan_publisher/ckan_publisher.module b/ckan_publisher/ckan_publisher.module
-index 3c408b1..8d96857 100644
+index 3c408b1..7d587fb 100644
 --- a/ckan_publisher/ckan_publisher.module
 +++ b/ckan_publisher/ckan_publisher.module
 @@ -17,10 +17,20 @@ function ckan_publisher_entity_info() {
@@ -336,7 +336,7 @@ index 3c408b1..8d96857 100644
   * CKAN Publisher settings form constructor.
   */
  function ckan_publisher_structure_page () {
-@@ -224,7 +286,261 @@ function ckan_publisher_theme() {
+@@ -224,7 +286,271 @@ function ckan_publisher_theme() {
        'render element' => 'elements',
        'template' => 'ckan_publisher',
      ),
@@ -358,7 +358,7 @@ index 3c408b1..8d96857 100644
 +  $form['id'] = array(
 +    '#type' => 'hidden',
 +    '#value' => $ckan_publisher->id,
-+  );
+   );
 +
 +  $form['title'] = array (
 +    '#type' => 'textfield',
@@ -374,7 +374,7 @@ index 3c408b1..8d96857 100644
 +    '#value' => $ckan_publisher->ckan_id,
 +    '#disabled' => TRUE,
 +    '#weight' => -1,
-   );
++  );
 +
 +  field_attach_form('ckan_publisher', $ckan_publisher, $form, $form_state);
 +
@@ -387,7 +387,6 @@ index 3c408b1..8d96857 100644
 +  $form['#submit'] = array('ckan_publisher_form_submit');
 +  $form['#suffix'] = theme('organogram_preview');
 +
-+  $db = Database::getConnection();
 +  $result = db_query("SELECT fid, deadline_date FROM ckan_organogram where id = " . $ckan_publisher->id );
 +  $dates = $result->fetchAllKeyed();
 +  $form_state['organogram_dates'] = $dates;
@@ -538,6 +537,11 @@ index 3c408b1..8d96857 100644
 +}
 +
 +function ckan_publisher_organogram_after($element, $form_state){
++  foreach (array('upload_button', 'remove_button') as $key) {
++    $element[$key]['#submit'][] = 'ckan_publisher_organogram_submit';
++    $element[$key]['#limit_validation_errors'] = array(array_slice($element['#parents'], 0, -1));
++  }
++
 +  if ($element['#file']) {
 +    $attributes = array(
 +      'data-toggle-pane' => 'organogram-preview',
@@ -556,6 +560,10 @@ index 3c408b1..8d96857 100644
 +      'data' => array('file' => $element['#file']->filename),
 +      'type' => 'setting',
 +    );
++    $element['deadline_date'] = array(
++      '#type' => 'hidden',
++      '#value' => $form_state['organogram_dates'][$element['#file']->fid],
++    );
 +
 +    //finally remove the form-control class put on by the bootstrap module which is unaware of managed_files
 +    $element['#attributes']['class'] = array_filter($element['#attributes']['class'], '_ckan_publisher_remove_form_control');
@@ -571,13 +579,9 @@ index 3c408b1..8d96857 100644
 +    } else {
 +      $date1 = new DateTime("${nextyear}-09-30");
 +    }
-+    $dates = array($date1->format('d-m-Y'), $date2->format('d-m-Y'));
-+    foreach (array('upload_button', 'remove_button') as $key) {
-+      $element[$key]['#submit'][] = 'ckan_publisher_organogram_submit';
-+      $element[$key]['#limit_validation_errors'] = array(array_slice($element['#parents'], 0, -1));
-+    }
++    $dates = array($date1->getTimestamp() => $date1->format('d-m-Y'), $date2->getTimestamp() => $date2->format('d-m-Y'));
 +
-+    $element['date_picker'] = array(
++    $element['deadline_date'] = array(
 +      '#label' => 'Choose date',
 +      '#type' => 'select',
 +      '#options' => $dates,
@@ -590,7 +594,13 @@ index 3c408b1..8d96857 100644
 +
 +function ckan_publisher_organogram_submit($form, &$form_state) {
 +
-+  echo "rubbish";
++  db_query("DELETE FROM ckan_organogram where id = " . $form['id']['#value'] );
++  foreach ($form_state['values']['field_organogram'][LANGUAGE_NONE] as $organogram){
++    if ($organogram['deadline_date']){
++      db_query("INSERT INTO ckan_organogram VALUES (".$form['id']['#value'] . ", " . $organogram['fid'] . ", " . $organogram['deadline_date'] .")");
++    }
++  }
++
 +}
 +
 +function ckan_publisher_form_validate($form, &$form_state){
