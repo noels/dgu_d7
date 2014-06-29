@@ -1,0 +1,11 @@
+name = DGU Organogram
+description = Field and code related to displaying Organograms.
+core = 7.x
+package = Features
+version = 7.x-1.0
+project = dgu_organogram
+dependencies[] = features
+dependencies[] = file
+features[features_api][] = api:2
+features[field_base][] = field_organogram
+features[field_instance][] = ckan_publisher-ckan_publisher-field_organogram
