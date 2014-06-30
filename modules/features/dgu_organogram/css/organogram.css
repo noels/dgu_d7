@@ -1,0 +1,39 @@
+.organogram-preview {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    background: rgba(0,0,0, 0.3);
+}
+
+.organogram-preview--show {
+    display: block;
+}
+
+.organogram-preview__inner {
+    position: relative;
+    padding: 0 32px 32px;
+    width: 1004px;
+    margin: 128px auto 64px;
+    background: #fff;
+}
+
+
+.organogram-preview-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    padding-top: 16px;
+    font-size: 32px;
+    line-height: 32px;
+}
+
+
+.organogram-preview-content {
+    padding-top: 32px;
+}
