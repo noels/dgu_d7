@@ -58,7 +58,7 @@ function dgu_organogram_preview ($fid){
 
 
 function dgu_organogram_preview_data($filename) {
-  $file = file_directory_temp() . $filename;
+  $file = file_directory_temp() . "/" . $filename;
   if (file_exists($file)) {
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
@@ -71,8 +71,9 @@ function dgu_organogram_preview_data($filename) {
     flush();
     readfile($file);
     exit;
+  } else {
+    echo "file not found!\n file name:" . $file . "\n";
   }
-
 }
 function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $form_id) {
   $ckan_publisher = ckan_publisher_load($form['id']['#value']);
