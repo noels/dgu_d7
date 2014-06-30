@@ -3,3 +3,299 @@
  * @file
  * Drupal needs this blank file.
  */
+
+/**
+ * Implement HOOK_menu()
+ */
+function dgu_organogram_menu() {
+  $items['organogram/preview/data'] = array(
+    'page callback' => 'dgu_organogram_preview_data',
+    'access arguments' => array('access content'),
+  );
+  $items['organogram/preview'] = array(
+    'page callback' => 'dgu_organogram_preview',
+    'access arguments' => array('access content'),
+  );
+  return $items;
+
+}
+
+/**
+ * Implement hook_theme().
+ */
+function dgu_organogram_theme() {
+  return array(
+    'organogram_preview' => array(
+      'template' => 'organogram_preview'
+    ),
+    'organogram_list_item' => array(
+      'template' => 'organogram_list_item',
+      '#preprocess' => 'media_element_process',
+    ),
+    'organogram_file_widget' => array(
+      'render element' => 'element',
+    ),
+  );
+}
+
+function dgu_organogram_preview ($fid){
+  $output = array();
+  $ret = 0;
+  $file = file_load($fid);
+  if ($wrapper = file_stream_wrapper_get_instance_by_uri($file->uri)) {
+    $filename = $wrapper->realpath();
+  }
+  $script = drupal_get_path('module', 'dgu_organogram') . '/bin/etl_to_csv.py';
+  $command = "${script} '${filename}' " . file_directory_temp();
+  exec($command, $output, $ret);
+  preg_match("/([^:]*:\ )(.*)/i", $output[5],$matches);
+  $index = $matches[2];
+  $handle = fopen($index, "r");
+  $json = json_decode(fread($handle, filesize($index)));
+  fclose($handle);
+  drupal_json_output(array('status' => 0, 'data' => $json[0]));
+}
+
+
+function dgu_organogram_preview_data($filename) {
+  $file = file_directory_temp() . $filename;
+  if (file_exists($file)) {
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename='.basename($file));
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($file));
+    ob_clean();
+    flush();
+    readfile($file);
+    exit;
+  }
+
+}
+function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $form_id) {
+  $ckan_publisher = ckan_publisher_load($form['id']['#value']);
+  $form['#validate'] = array('dgu_organogram_form_validate');
+  $form['#submit'] = array('dgu_organogram_form_submit');
+  $form['#suffix'] = theme('organogram_preview');
+
+  $result = db_query("SELECT fid, deadline_date FROM ckan_organogram where id = " . $ckan_publisher->id );
+  $dates = $result->fetchAllKeyed();
+  $form_state['organogram_dates'] = $dates;
+
+  drupal_add_css(drupal_get_path('module', 'dgu_organogram') . '/css/organogram.css',
+    array('group' => CSS_THEME, 'every_page' => TRUE));
+  drupal_add_js(drupal_get_path('module', 'dgu_organogram') . '/js/d3.v3.js');
+  drupal_add_js(drupal_get_path('module', 'dgu_organogram') . '/js/organogram.js');
+}
+
+function dgu_organogram_form_submit($form, &$form_state){
+  $parents = $form_state['triggering_element']['#array_parents'];
+  $button_key = array_pop($parents);
+  if ('submit' == $button_key){
+    form_state_values_clean($form_state);
+    $files_count = count($form_state['values']['field_organogram'][LANGUAGE_NONE]);
+    if (!$form_state['values']['field_organogram'][LANGUAGE_NONE][$files_count -1][fid]){
+      unset($form_state['values']['field_organogram'][LANGUAGE_NONE][$files_count -1]);
+    }
+    $ckan_publisher = New CKANPublisher($form_state['values']);
+    $ckan_publisher->save();
+  }
+}
+
+function dgu_organogram_field_widget_form_alter(&$element, &$form_state, $context) {
+  if ($element['#field_name'] == 'field_organogram'){
+    $children = element_children($element);
+    foreach ($children as $key){
+      $element[$key]['#process'][] = 'dgu_organogram_after';
+    }
+    $element['#theme'] = 'organogram_file_widget';
+  }
+}
+
+function _dgu_organogram_remove_form_control($class){
+  return ('form-control' != $class);
+}
+
+/**
+ * Returns HTML for a group of file upload widgets.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: A render element representing the widgets.
+ *
+ * @ingroup themeable
+ */
+function theme_organogram_file_widget($variables) {
+  $element = $variables['element'];
+
+  // Special ID and classes for draggable tables.
+  $weight_class = $element['#id'] . '-weight';
+  $table_id = $element['#id'] . '-table';
+
+  // Build up a table of applicable fields.
+  $headers = array();
+  $headers[] = t('File information');
+  if ($element['#display_field']) {
+    $headers[] = array(
+      'data' => t('Display'),
+      'class' => array('checkbox'),
+    );
+  }
+  $headers[] = t('Weight');
+  $headers[] = t('Operations');
+
+  // Get our list of widgets in order (needed when the form comes back after
+  // preview or failed validation).
+  $widgets = array();
+  foreach (element_children($element) as $key) {
+    $widgets[] = &$element[$key];
+  }
+  usort($widgets, '_field_sort_items_value_helper');
+
+  $rows = array();
+  foreach ($widgets as $key => &$widget) {
+    // Save the uploading row for last.
+    if ($widget['#file'] == FALSE) {
+      $widget['#title'] = $element['#file_upload_title'];
+      $widget['#description'] = $element['#file_upload_description'];
+      continue;
+    }
+
+    // Delay rendering of the buttons, so that they can be rendered later in the
+    // "operations" column.
+    $operations_elements = array();
+    foreach (element_children($widget) as $sub_key) {
+      if (isset($widget[$sub_key]['#type']) && ($widget[$sub_key]['#type'] == 'submit'  || $widget[$sub_key]['#type'] == 'button' )) {
+        //remove the form-control class
+        $widget[$sub_key]['#attributes']['class'] = array_filter($widget[$sub_key]['#attributes']['class'], '_dgu_organogram_remove_form_control');
+        hide($widget[$sub_key]);
+        $operations_elements[] = &$widget[$sub_key];
+      }
+      $deadline_dates = array();
+      if (isset($widget[$sub_key]['#type']) && ($widget[$sub_key]['#type'] == 'deadline_date' )){
+        $widget[$sub_key]['#type'] = 'textfield';
+        hide($widget[$sub_key]);
+        $deadline_dates[] = &$widget[$sub_key];
+      }
+    }
+
+    // Delay rendering of the "Display" option and the weight selector, so that
+    // each can be rendered later in its own column.
+    if ($element['#display_field']) {
+      hide($widget['display']);
+    }
+    hide($widget['_weight']);
+
+    // Render everything else together in a column, without the normal wrappers.
+    $widget['#theme_wrappers'] = array();
+    $information = drupal_render($widget);
+
+    // Render the previously hidden elements, using render() instead of
+    // drupal_render(), to undo the earlier hide().
+    $operations = '';
+    foreach ($operations_elements as $operation_element) {
+      $operations .= render($operation_element);
+    }
+    $display = '';
+    if ($element['#display_field']) {
+      unset($widget['display']['#title']);
+      $display = array(
+        'data' => render($widget['display']),
+        'class' => array('checkbox'),
+      );
+    }
+    $widget['_weight']['#attributes']['class'] = array($weight_class);
+    $weight = render($widget['_weight']);
+
+    // Arrange the row with all of the rendered columns.
+    $row = array();
+    $row[] = $information;
+    if ($element['#display_field']) {
+      $row[] = $display;
+    }
+    $row[] = $weight;
+    $row[] = $operations;
+    $rows[] = array(
+      'data' => $row,
+      'class' => isset($widget['#attributes']['class']) ? array_merge($widget['#attributes']['class'], array('draggable')) : array('draggable'),
+    );
+  }
+
+  drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
+
+  $output = '';
+  $output = empty($rows) ? '' : theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => $table_id)));
+  $output .= drupal_render_children($element);
+  return $output;
+}
+
+function dgu_organogram_after($element, $form_state){
+  foreach (array('upload_button', 'remove_button') as $key) {
+    $element[$key]['#submit'][] = 'dgu_organogram_organogram_submit';
+    $element[$key]['#limit_validation_errors'] = array(array_slice($element['#parents'], 0, -1));
+  }
+
+  if ($element['#file']) {
+    $attributes = array(
+      'data-toggle-pane' => 'organogram-preview',
+      'class' => array('js-organogram-preview-btn', 'form-submit'),
+      'data-organogram-file' => $element['#file']->fid,
+    );
+    $element['filename']['#markup'] .= "<span class='deadline_date'>". date('d-m-Y', $form_state['organogram_dates'][$element['#file']->fid]?:0) . "<span>";
+    $btnName = "preview_organogram_{$element['#language']}_{$element['#delta']}_button";
+    $element['preview'] = array(
+      '#name' => $btnName,
+      '#type' => 'button',
+      '#attributes' => $attributes,
+      '#value' => t('Preview'),
+    );
+    $element['preview']['#attached']['js'][] = array(
+      'data' => array('file' => $element['#file']->filename),
+      'type' => 'setting',
+    );
+    $element['deadline_date'] = array(
+      '#type' => 'hidden',
+      '#value' => $form_state['organogram_dates'][$element['#file']->fid],
+    );
+
+    //finally remove the form-control class put on by the bootstrap module which is unaware of managed_files
+    $element['#attributes']['class'] = array_filter($element['#attributes']['class'], '_dgu_organogram_remove_form_control');
+  } else {
+    $today = getdate();
+    $next_year = $today['year'] + 1;
+    if ($today['mon'] <= 3){
+      $date1 = new DateTime("${today['year']}-03-31");
+      $date2 = new DateTime("${today['year']}-09-30");
+    } else if ($today['mon'] <= 9){
+      $date1 = new DateTime("${today['year']}-09-30");
+      $date2 = new DateTime("${next_year}-03-31");
+    } else {
+      $date1 = new DateTime("${next_year}-09-30");
+    }
+    $dates = array($date1->getTimestamp() => $date1->format('d-m-Y'), $date2->getTimestamp() => $date2->format('d-m-Y'));
+
+    $element['deadline_date'] = array(
+      '#label' => 'Choose date',
+      '#type' => 'select',
+      '#options' => $dates,
+      '#default_value' => $dates[0],
+    );
+  }
+  return $element;
+}
+
+
+function dgu_organogram_organogram_submit($form, &$form_state) {
+  db_query("DELETE FROM ckan_organogram where id = " . $form['id']['#value'] );
+  foreach ($form_state['values']['field_organogram'][LANGUAGE_NONE] as $organogram){
+    if ($organogram['deadline_date']){
+      db_query("INSERT INTO ckan_organogram VALUES (".$form['id']['#value'] . ", " . $organogram['fid'] . ", " . $organogram['deadline_date'] .")");
+    }
+  }
+}
+
+function dgu_organogram_form_validate($form, &$form_state){
+
+}
