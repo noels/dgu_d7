@@ -266,14 +266,12 @@ function dgu_organogram_after($element, $form_state){
   } else {
     $today = getdate();
     $next_year = $today['year'] + 1;
-    if ($today['mon'] <= 3){
+    if ($today['mon'] <= 6){
       $date1 = new DateTime("${today['year']}-03-31");
       $date2 = new DateTime("${today['year']}-09-30");
-    } else if ($today['mon'] <= 9){
+    } else if ($today['mon'] <= 12){
       $date1 = new DateTime("${today['year']}-09-30");
       $date2 = new DateTime("${next_year}-03-31");
-    } else {
-      $date1 = new DateTime("${next_year}-09-30");
     }
     $dates = array($date1->getTimestamp() => $date1->format('d-m-Y'), $date2->getTimestamp() => $date2->format('d-m-Y'));
 
