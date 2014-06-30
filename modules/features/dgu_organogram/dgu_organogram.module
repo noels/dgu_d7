@@ -16,6 +16,10 @@ function dgu_organogram_menu() {
     'page callback' => 'dgu_organogram_preview',
     'access arguments' => array('access content'),
   );
+  $items['organogram/download_csv'] = array(
+    'page callback' => 'dgu_organogram_download_csv',
+    'access arguments' => array('access content'),
+  );
   return $items;
 
 }
@@ -75,6 +79,10 @@ function dgu_organogram_preview_data($filename) {
     echo "file not found!\n file name:" . $file . "\n";
   }
 }
+function dgu_organogram_download_csv($fid) {
+
+}
+
 function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $form_id) {
   $ckan_publisher = ckan_publisher_load($form['id']['#value']);
   $form['#validate'] = array('dgu_organogram_form_validate');
@@ -252,6 +260,12 @@ function dgu_organogram_after($element, $form_state){
       '#type' => 'button',
       '#attributes' => $attributes,
       '#value' => t('Preview'),
+    );
+    $btnName = "publish_organogram_{$element['#language']}_{$element['#delta']}_button";
+    $element['publish'] = array(
+      '#name' => $btnName,
+      '#type' => 'button',
+      '#value' => t('Publish'),
     );
     $element['preview']['#attached']['js'][] = array(
       'data' => array('file' => $element['#file']->filename),
