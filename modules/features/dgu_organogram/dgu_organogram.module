@@ -244,7 +244,8 @@ function dgu_organogram_after($element, $form_state){
       'class' => array('js-organogram-preview-btn', 'form-submit'),
       'data-organogram-file' => $element['#file']->fid,
     );
-    $element['filename']['#markup'] .= "<span class='deadline_date'>". date('d-m-Y', $form_state['organogram_dates'][$element['#file']->fid]?:0) . "<span>";
+    $element['filename']['#markup'] .= "<span class='deadline_date'>Publish date: ". date('d-m-Y', $form_state['organogram_dates'][$element['#file']->fid]?:0) . "<span> ";
+    $element['filename']['#markup'] .= "<span class='updload_date'>Uploaded: ".date('d-m-Y', $element['#entity']->created) ."<span>";
     $btnName = "preview_organogram_{$element['#language']}_{$element['#delta']}_button";
     $element['preview'] = array(
       '#name' => $btnName,
