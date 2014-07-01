@@ -84,7 +84,12 @@ function dgu_organogram_download_csv($fid) {
 }
 
 function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $form_id) {
+  drupal_set_title("Organograms upload dashboard.");
+  $form["#prefix"] = "<div class=\"blurb\"> Upload your latest Organograms spreadsheet here.<div>";
   $ckan_publisher = ckan_publisher_load($form['id']['#value']);
+  $form['title']['#title'] = "Your publisher details";
+  $form['ckan_id']['#title'] = "Your  data catalogue ID";
+  $form['field_organogram'][LANGUAGE_NONE]['#title'] = "Manage your Organogram uploads";
   $form['#validate'] = array('dgu_organogram_form_validate');
   $form['#submit'] = array('dgu_organogram_form_submit');
   $form['#suffix'] = theme('organogram_preview');
