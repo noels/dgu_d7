@@ -93,6 +93,7 @@ function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $fo
   $form['#validate'] = array('dgu_organogram_form_validate');
   $form['#submit'] = array('dgu_organogram_form_submit');
   $form['#suffix'] = theme('organogram_preview');
+  hide($form['redirect']);
 
   $result = db_query("SELECT fid, deadline_date FROM ckan_organogram where id = " . $ckan_publisher->id );
   $dates = $result->fetchAllKeyed();
