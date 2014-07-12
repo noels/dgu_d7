@@ -43,6 +43,18 @@ function dgu_organogram_theme() {
 }
 
 function dgu_organogram_preview ($fid){
+  $index = _dgu_organogram_generate_csv_files($fid);
+  $handle = fopen($index, "r");
+  $json = json_decode(fread($handle, filesize($index)));
+  fclose($handle);
+  drupal_json_output(array('status' => 0, 'data' => $json[0]));
+}
+
+/**
+ * @param $fid
+ * @param $index
+ */
+function ($fid) {
   $output = array();
   $ret = 0;
   $file = file_load($fid);
@@ -52,12 +64,8 @@ function dgu_organogram_preview ($fid){
   $script = drupal_get_path('module', 'dgu_organogram') . '/bin/etl_to_csv.py';
   $command = "${script} '${filename}' " . file_directory_temp();
   exec($command, $output, $ret);
-  preg_match("/([^:]*:\ )(.*)/i", $output[5],$matches);
-  $index = $matches[2];
-  $handle = fopen($index, "r");
-  $json = json_decode(fread($handle, filesize($index)));
-  fclose($handle);
-  drupal_json_output(array('status' => 0, 'data' => $json[0]));
+  preg_match("/([^:]*:\ )(.*)/i", $output[5], $matches);
+  return $matches[2];
 }
 
 
@@ -270,8 +278,9 @@ function dgu_organogram_after($element, $form_state){
     $btnName = "publish_organogram_{$element['#language']}_{$element['#delta']}_button";
     $element['publish'] = array(
       '#name' => $btnName,
-      '#type' => 'button',
+      '#type' => 'submit',
       '#value' => t('Publish'),
+      '#submit' => array('dgu_organogram_organogram_publish'),
     );
     $element['preview']['#attached']['js'][] = array(
       'data' => array('file' => $element['#file']->filename),
@@ -314,6 +323,85 @@ function dgu_organogram_organogram_submit($form, &$form_state) {
       db_query("INSERT INTO ckan_organogram VALUES (".$form['id']['#value'] . ", " . $organogram['fid'] . ", " . $organogram['deadline_date'] .")");
     }
   }
+  $commands = array();
+
+// Add other commands
+
+  $commands[] = ajax_command_prepend('div#ajax-status-messages-wrapper', theme('status_messages'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+function _dgu_organogram_package_json($group){
+
+  $package = array(
+      'name' => 'organogram-' . $group['name'],
+      'title' => 'Organogram of Roles & Salaries',
+      'owner_org' => $group['name'],
+      'license_id' => 'uk-ogl',
+      'notes' => 'Organogram (organisation chart) showing all staff roles. Names and salaries are also listed for the Senior Civil Servants. Organogram data is released by all central government departments and their agencies since 2010. Snapshots for 31st March and 30th September are published by 6th June and 6th December each year. The published data is validated and released in CSV and RDF format and OGL-licensed for reuse.',
+      'tags' =>
+        array (
+          0 => array(
+                'name' => 'organograms',
+              ),
+        ),
+      'extras' =>
+        array (
+          0 => array(
+                'key' => 'geographic_coverage',
+                'value' => '111100: United Kingdom (England, Scotland, Wales, Northern Ireland)',
+              ),
+          1 => array(
+                'key' => 'mandate',
+                'value' => 'https://www.gov.uk/government/news/letter-to-government-departments-on-opening-up-data',
+              ),
+          2 => array(
+                'key' => 'update_frequency',
+                'value' => 'biannually',
+              ),
+          3 => array(
+                'key' => 'temporal_coverage-from',
+                'value' => '2010',
+              ),
+          4 => array(
+                'key' => 'theme-primary',
+                'value' => 'Government',
+              ),
+          5 => array(
+                'key' => 'import_source',
+                'value' => 'organograms_v2',
+              ),
+        ),
+    );
+  return json_encode($package);
+}
+
+function dgu_organogram_organogram_publish($form, &$form_state){
+  require_once 'sites/all/vendor/autoload.php';
+  $client = Silex\ckan\CkanClient::factory(array(
+      'baseUrl' => variable_get('ckan_url', ''),
+      'apiKey' => variable_get('ckan_apikey', ''),
+  ));
+  //Find the dataset for the current publisher
+  $publisher = $form['title']['#value'];
+  $response = $client->PackageSearch(array('fq' => 'publisher:' . $publisher . ' import_source:organograms_v2'));
+  $searchResult = $response->toArray();
+  //If the dataset cannot be found, create one.
+  if ($searchResult['result']['count'] == 0) {
+    $response = $client->GetGroup(array('id' => $form['ckan_id']['#value']));
+    $group = $response->toArray();
+    if ($group['success']) {
+      $packageJson = _dgu_organogram_package_json($group['result']);
+      $response = $client->PackageCreate(array('data'=>$packageJson));
+    } else {
+      drupal_set_message("Unable to create package. Group not found. group id: " . $form['ckan_id']['#value'] );
+    }
+  }
+  //Generate the CSV/XLS resources for the dataset and store permanently in Drupal
+
+  //If resources for dataset are not found, create them.
+  //Else update them
 }
 
 function dgu_organogram_form_validate($form, &$form_state){
