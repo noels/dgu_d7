@@ -54,7 +54,7 @@ function dgu_organogram_preview ($fid){
  * @param $fid
  * @param $index
  */
-function ($fid) {
+function _dgu_organogram_generate_csv_files($fid) {
   $output = array();
   $ret = 0;
   $file = file_load($fid);
