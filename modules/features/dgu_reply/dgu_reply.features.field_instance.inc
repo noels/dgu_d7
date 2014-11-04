@@ -14,7 +14,7 @@ function dgu_reply_field_default_field_instances() {
   $field_instances['reply-comment-field_reply_comment'] = array(
     'bundle' => 'comment',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -25,6 +25,9 @@ function dgu_reply_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -54,7 +57,7 @@ function dgu_reply_field_default_field_instances() {
   $field_instances['reply-comment-field_reply_subject'] = array(
     'bundle' => 'comment',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -65,6 +68,9 @@ function dgu_reply_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -94,7 +100,7 @@ function dgu_reply_field_default_field_instances() {
   $field_instances['reply-field_comment-field_reply_comment'] = array(
     'bundle' => 'field_comment',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -105,6 +111,9 @@ function dgu_reply_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -134,7 +143,7 @@ function dgu_reply_field_default_field_instances() {
   $field_instances['reply-field_comment-field_reply_subject'] = array(
     'bundle' => 'field_comment',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -145,6 +154,9 @@ function dgu_reply_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -170,9 +182,53 @@ function dgu_reply_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'reply-review_comment-field_review_comment'
+  $field_instances['reply-review_comment-field_review_comment'] = array(
+    'bundle' => 'review_comment',
+    'default_value' => NULL,
+    'deleted' => '0',
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'field_replies' => '',
+          'field_replies_settings' => array(
+            'field_replies_reply_field_name' => '',
+            'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
+          ),
+        ),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'reply',
+    'field_name' => 'field_review_comment',
+    'label' => 'Note',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 31,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Comment');
+  t('Note');
   t('Subject');
 
   return $field_instances;

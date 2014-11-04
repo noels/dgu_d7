@@ -13,7 +13,7 @@ function dgu_glossary_field_default_field_instances() {
   // Exported field_instance: 'node-suggested_definition-field_comment'
   $field_instances['node-suggested_definition-field_comment'] = array(
     'bundle' => 'suggested_definition',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -24,6 +24,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'reply_default',
@@ -60,7 +63,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['node-suggested_definition-field_reason_for_change'] = array(
     'bundle' => 'suggested_definition',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Briefly describe why you have suggested this change.',
     'display' => array(
       'default' => array(
@@ -71,6 +74,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -106,7 +112,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['node-suggested_definition-field_suggested_definition'] = array(
     'bundle' => 'suggested_definition',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -118,6 +124,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -157,7 +166,7 @@ function dgu_glossary_field_default_field_instances() {
         'tid' => 8,
       ),
     ),
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -169,6 +178,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'taxonomy_term_reference_link',
@@ -201,7 +213,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['node-suggested_term-field_reason_for_change'] = array(
     'bundle' => 'suggested_term',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Briefly describe why you have suggested this change. If this term comes from a published source or an accredited glossary, you should cite it here.',
     'display' => array(
       'default' => array(
@@ -212,6 +224,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -247,7 +262,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['node-suggested_term-field_suggested_definition'] = array(
     'bundle' => 'suggested_term',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -259,6 +274,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -294,7 +312,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['node-suggested_term-field_term_name'] = array(
     'bundle' => 'suggested_term',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -306,6 +324,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -340,7 +361,7 @@ function dgu_glossary_field_default_field_instances() {
   // Exported field_instance: 'taxonomy_term-glossary-field_comment'
   $field_instances['taxonomy_term-glossary-field_comment'] = array(
     'bundle' => 'glossary',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -351,6 +372,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'reply_default',
@@ -386,7 +410,7 @@ function dgu_glossary_field_default_field_instances() {
         'votingapi_tag' => 'vote',
       ),
     ),
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -397,6 +421,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'default',
@@ -429,7 +456,7 @@ function dgu_glossary_field_default_field_instances() {
         'value' => 0,
       ),
     ),
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -440,6 +467,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'list_default',
@@ -468,7 +498,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['taxonomy_term-glossary-field_quality'] = array(
     'bundle' => 'glossary',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -480,6 +510,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
           'style' => 'average',
           'text' => 'average',
@@ -518,7 +551,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['taxonomy_term-glossary-field_related_terms'] = array(
     'bundle' => 'glossary',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -529,6 +562,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'taxonomy_term_reference_link',
@@ -558,7 +594,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['taxonomy_term-glossary-field_source'] = array(
     'bundle' => 'glossary',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -569,6 +605,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'list_default',
@@ -595,7 +634,7 @@ function dgu_glossary_field_default_field_instances() {
   $field_instances['taxonomy_term-glossary-field_source_url'] = array(
     'bundle' => 'glossary',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -606,6 +645,9 @@ function dgu_glossary_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'link_default',

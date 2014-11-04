@@ -14,7 +14,7 @@ function dgu_search_apachesolr_environments() {
   $environment->api_version = 1;
   $environment->env_id = 'solr';
   $environment->name = 'solr';
-  $environment->url = 'http://localhost:8983/solr';
+  $environment->url = 'http://localhost:8983/solr/dgu_drupal';
   $environment->service_class = '';
   $environment->conf = array(
     'apachesolr_access_always_add_grants' => 0,
@@ -35,9 +35,21 @@ function dgu_search_apachesolr_environments() {
         'last_changed' => 0,
         'last_entity_id' => 0,
       ),
+      'message_type_category' => array(
+        'last_changed' => 0,
+        'last_entity_id' => 0,
+      ),
+      'message_type' => array(
+        'last_changed' => 0,
+        'last_entity_id' => 0,
+      ),
+      'message' => array(
+        'last_changed' => 0,
+        'last_entity_id' => 0,
+      ),
       'node' => array(
-        'last_changed' => '1398687303',
-        'last_entity_id' => '3110',
+        'last_changed' => '1412074541',
+        'last_entity_id' => '3455',
       ),
       'redirect' => array(
         'last_changed' => 0,
@@ -76,18 +88,21 @@ function dgu_search_apachesolr_environments() {
         'last_entity_id' => 0,
       ),
     ),
-    'apachesolr_index_updated' => 1398773575,
-    'apachesolr_last_optimize' => 1398687455,
+    'apachesolr_index_updated' => 1412076028,
+    'apachesolr_last_optimize' => 1412061030,
     'apachesolr_read_only' => '0',
+    'apachesolr_search_facet_pages' => '',
   );
   $environment->index_bundles = array(
     'node' => array(
       0 => 'app',
-      1 => 'blog',
-      2 => 'dataset_request',
-      3 => 'forum',
-      4 => 'page',
-      5 => 'resource',
+      1 => 'article',
+      2 => 'blog',
+      3 => 'dataset_request',
+      4 => 'forum',
+      5 => 'page',
+      6 => 'resource',
+      7 => 'user_story',
     ),
   );
   $export['solr'] = $environment;

@@ -13,7 +13,7 @@ function dgu_site_feature_field_default_field_instances() {
   // Exported field_instance: 'fieldable_panels_pane-tile_big-field_image_tile_big'
   $field_instances['fieldable_panels_pane-tile_big-field_image_tile_big'] = array(
     'bundle' => 'tile_big',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Image will be cropped to 370x500px, which are also the minimum size requirements',
     'display' => array(
       'default' => array(
@@ -27,6 +27,9 @@ function dgu_site_feature_field_default_field_instances() {
           ),
           'image_link' => '',
           'image_style' => 'tile_big',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'image',
         'weight' => 1,
@@ -63,7 +66,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-tile_big-field_link'] = array(
     'bundle' => 'tile_big',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -74,6 +77,9 @@ function dgu_site_feature_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'link_url',
@@ -116,7 +122,7 @@ function dgu_site_feature_field_default_field_instances() {
   // Exported field_instance: 'fieldable_panels_pane-tile_small-field_image_tile_small'
   $field_instances['fieldable_panels_pane-tile_small-field_image_tile_small'] = array(
     'bundle' => 'tile_small',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Image will be cropped to 370x120px, which are also the minimum size requirements',
     'display' => array(
       'default' => array(
@@ -130,6 +136,9 @@ function dgu_site_feature_field_default_field_instances() {
           ),
           'image_link' => '',
           'image_style' => 'tile_small',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'image',
         'weight' => 1,
@@ -166,7 +175,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-tile_small-field_link'] = array(
     'bundle' => 'tile_small',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -177,6 +186,9 @@ function dgu_site_feature_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'link_url',
@@ -219,7 +231,7 @@ function dgu_site_feature_field_default_field_instances() {
   // Exported field_instance: 'fieldable_panels_pane-tile_text_big-field_image_tile_text_big'
   $field_instances['fieldable_panels_pane-tile_text_big-field_image_tile_text_big'] = array(
     'bundle' => 'tile_text_big',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Image will be cropped to 370x370px, which are also the minimum size requirements',
     'display' => array(
       'default' => array(
@@ -233,6 +245,9 @@ function dgu_site_feature_field_default_field_instances() {
           ),
           'image_link' => '',
           'image_style' => 'tile_text_big',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'image',
         'weight' => 1,
@@ -269,7 +284,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-tile_text_big-field_link'] = array(
     'bundle' => 'tile_text_big',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -280,6 +295,9 @@ function dgu_site_feature_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'link_default',
@@ -323,7 +341,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-tile_text_big-field_tile_description'] = array(
     'bundle' => 'tile_text_big',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -334,6 +352,9 @@ function dgu_site_feature_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -362,7 +383,7 @@ function dgu_site_feature_field_default_field_instances() {
   // Exported field_instance: 'fieldable_panels_pane-tile_text_small-field_image_tile_text_small'
   $field_instances['fieldable_panels_pane-tile_text_small-field_image_tile_text_small'] = array(
     'bundle' => 'tile_text_small',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Image will be cropped to 120x120px, which are also the minimum size requirements',
     'display' => array(
       'default' => array(
@@ -376,6 +397,9 @@ function dgu_site_feature_field_default_field_instances() {
           ),
           'image_link' => '',
           'image_style' => 'tile_text_small',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'image',
         'weight' => 2,
@@ -412,7 +436,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['fieldable_panels_pane-tile_text_small-field_link'] = array(
     'bundle' => 'tile_text_small',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -423,6 +447,9 @@ function dgu_site_feature_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
         ),
         'type' => 'link_default',
@@ -466,7 +493,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['file-image-field_file_image_alt_text'] = array(
     'bundle' => 'image',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Alternative text is used by screen readers, search engines, and when the image cannot be loaded. By adding alt text you improve accessibility and search engine optimization.',
     'display' => array(
       'default' => array(
@@ -505,17 +532,17 @@ function dgu_site_feature_field_default_field_instances() {
     'label' => 'Alt Text',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 0,
+      'text_processing' => '0',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 60,
+        'size' => '60',
       ),
       'type' => 'text_textfield',
-      'weight' => -4,
+      'weight' => '-4',
     ),
   );
 
@@ -523,7 +550,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['file-image-field_file_image_title_text'] = array(
     'bundle' => 'image',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Title text is used in the tool tip when a user hovers their mouse over the image. Adding title text makes it easier to understand the context of an image and improves usability.',
     'display' => array(
       'default' => array(
@@ -562,17 +589,17 @@ function dgu_site_feature_field_default_field_instances() {
     'label' => 'Title Text',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 0,
+      'text_processing' => '0',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 60,
+        'size' => '60',
       ),
       'type' => 'text_textfield',
-      'weight' => -3,
+      'weight' => '-3',
     ),
   );
 
@@ -580,7 +607,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['node-article-body'] = array(
     'bundle' => 'article',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -591,6 +618,9 @@ function dgu_site_feature_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -604,6 +634,9 @@ function dgu_site_feature_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
+          ),
+          'quickedit' => array(
+            'editor' => 'form',
           ),
           'trim_length' => 600,
         ),
@@ -635,7 +668,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['node-page-body'] = array(
     'bundle' => 'page',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -647,9 +680,12 @@ function dgu_site_feature_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
+          ),
         ),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'search_result' => array(
         'label' => 'hidden',
@@ -662,6 +698,9 @@ function dgu_site_feature_field_default_field_instances() {
           ),
           'more_link' => 0,
           'more_text' => 'Read more',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'summary_handler' => 'trim',
           'trim_length' => 250,
           'trim_options' => array(
@@ -671,7 +710,7 @@ function dgu_site_feature_field_default_field_instances() {
           'trim_type' => 'chars',
         ),
         'type' => 'smart_trim_format',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -682,10 +721,13 @@ function dgu_site_feature_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'trim_length' => 600,
         ),
         'type' => 'text_summary_or_trimmed',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -712,7 +754,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['node-page-field_category'] = array(
     'bundle' => 'page',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -724,21 +766,24 @@ function dgu_site_feature_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -760,7 +805,7 @@ function dgu_site_feature_field_default_field_instances() {
   // Exported field_instance: 'node-page-field_comment'
   $field_instances['node-page-field_comment'] = array(
     'bundle' => 'page',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -772,21 +817,24 @@ function dgu_site_feature_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'reply_default',
-        'weight' => 5,
+        'weight' => '6',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => '5',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -812,7 +860,7 @@ function dgu_site_feature_field_default_field_instances() {
   // Exported field_instance: 'node-page-field_file_attachments'
   $field_instances['node-page-field_file_attachments'] = array(
     'bundle' => 'page',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -824,21 +872,24 @@ function dgu_site_feature_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'file_default',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -867,7 +918,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['node-page-field_sector'] = array(
     'bundle' => 'page',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -879,21 +930,24 @@ function dgu_site_feature_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -916,7 +970,7 @@ function dgu_site_feature_field_default_field_instances() {
   $field_instances['node-page-field_tags'] = array(
     'bundle' => 'page',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -928,21 +982,24 @@ function dgu_site_feature_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',

@@ -220,8 +220,8 @@ class FeatureContext extends Drupal\DrupalExtension\Context\DrupalContext
   public function iAmLoggedInAsAUserWithTheRole($user_name, $role) {
     if (isset($user_name)) {
 
-      // Check if a user with this role is already logged in.
-      if ($this->loggedIn() && $this->user && isset($this->user->role) && $this->user->role == $role) {
+      // Check if a user with this user name and role is already logged in.
+      if ($this->loggedIn() && $this->user && isset($this->user->role) && $this->user->role == $role && isset($this->user->name) && $this->user->name == $user_name) {
         return TRUE;
       }
       elseif (isset($this->users[$user_name])) {
@@ -598,7 +598,7 @@ class FeatureContext extends Drupal\DrupalExtension\Context\DrupalContext
   }
 
   /**
-   * @Given /^the "([^"]*)" user received an email "([^"]*)"$/
+   * @Given /^the "([^"]*)" user received an email '([^']*)'$/
    */
   public function theUserReceivedAnEmail($user, $title) {
 
@@ -610,12 +610,50 @@ class FeatureContext extends Drupal\DrupalExtension\Context\DrupalContext
     $all = imap_check($mbox);
 
     $received = false;
-    // Trying 30 times with one second pause
-    for ($attempts = 0; $attempts++ < 30; ) {
+    // Trying 150 times with three seconds pause
+    for ($attempts = 0; $attempts++ < 150; ) {
 
       if ($all->Nmsgs) {
         foreach (imap_fetch_overview($mbox, "1:$all->Nmsgs") as $msg) {
-            if ($msg->to == $mail_address && $msg->subject == $title) {
+          if ($msg->to == $mail_address && strpos($msg->subject, $title) !== FALSE) {
+          $msg->body = imap_fetchbody($mbox, $msg->msgno, 1);
+          // Consider if we start sending HTML emails.
+          //$msg->body['html'] = imap_fetchbody($mbox, $msg->msgno, 2);
+          $this->mailMessages[$user][] = $msg;
+          imap_delete($mbox, $msg->msgno);
+          $received = true;
+          break 2;
+        }
+        }
+      }
+      sleep(3);
+    }
+    imap_close($mbox);
+    // Throw Exception if message not found.
+    if (!$received) {
+      throw new \Exception('Email "' . $title . '" to "' . $mail_address . '" not received.');
+    }
+  }
+
+  /**
+   * @Given /^the "([^"]*)" user have not received an email '([^']*)'$/
+   */
+  public function theUserNotReceivedAnEmail($user, $title) {
+
+    $mail_address = $this->getMailAddress($user);
+    $title = $this->fixStepArgument($title);
+
+    $mbox = imap_open( $this->email['mailbox'], $mail_address,  $this->email['password']);
+
+    $all = imap_check($mbox);
+
+    $received = false;
+    // Trying 10 times with three seconds pause
+    for ($attempts = 0; $attempts++ < 10; ) {
+
+      if ($all->Nmsgs) {
+        foreach (imap_fetch_overview($mbox, "1:$all->Nmsgs") as $msg) {
+          if ($msg->to == $mail_address && strpos($msg->subject, $title) !== FALSE) {
             $msg->body = imap_fetchbody($mbox, $msg->msgno, 1);
             // Consider if we start sending HTML emails.
             //$msg->body['html'] = imap_fetchbody($mbox, $msg->msgno, 2);
@@ -626,12 +664,12 @@ class FeatureContext extends Drupal\DrupalExtension\Context\DrupalContext
           }
         }
       }
-      sleep(1);
+      sleep(3);
     }
     imap_close($mbox);
     // Throw Exception if message not found.
-    if (!$received) {
-      throw new \Exception('Email "' . $title . '" to "' . $mail_address . '" not received.');
+    if ($received) {
+      throw new \Exception('Email "' . $title . '" to "' . $mail_address . '" has been received.');
     }
   }
 
@@ -677,13 +715,12 @@ class FeatureContext extends Drupal\DrupalExtension\Context\DrupalContext
       $this->getDriver()->drush('user-cancel', array($user_name), array('yes' => NULL, 'delete-content' => NULL));
     }
     catch (Exception $e) {
-      if(strpos($e->getMessage(), "Could not find a user account with the name $user_name!") !== 0){
+      if(strpos($e->getMessage(), "Could not find a user account with the name") !== 0){
         // Print exception message if exception is different than expected
         print $e->getMessage();
       }
     }
   }
-
 
   /**
    * @Given /^"([^"]*)" option in "([^"]*)" should be disabled$/
@@ -1017,9 +1054,105 @@ class FeatureContext extends Drupal\DrupalExtension\Context\DrupalContext
   }
 
   /**
+   * @Given /^user "([^"]*)" belongs to "([^"]*)" publisher$/
+   */
+  public function userBelongsToPublisher($user_name, $publisher_name) {
+    try {
+      $drush = $this->getDriver();
+      $publisher_id = $drush->drush('ev', array('"\$query = new EntityFieldQuery(); \$result = \$query->entityCondition(\'entity_type\', \'ckan_publisher\')->propertyCondition(\'title\', \'Academics\')->execute(); \$publisher = reset(\$result[\'ckan_publisher\']); print \$publisher->id;"'));
+      $uid = $drush->drush('ev', array('"\$user = user_load_by_name(\'' . $user_name . '\'); \$user->field_publishers[\'und\'][0][\'target_id\'] = ' . $publisher_id . '; user_save(\$user);"'));
+    }
+    catch (Exception $e) {
+      throw new \Exception('PHP evaluation failed. ' . $e->getMessage());
+    }
+  }
+
+  /**
+   * @Given /^I set digest last run to (\d+) day(?:s|) ago$/
+   */
+  public function iSetDigestLastRunToDayAgo($days) {
+    try {
+      $timestamp = time() - 60 * 60 * 24 * $days;
+      $drush = $this->getDriver();
+      $drush->drush('vset', array('"message_digest_1 day_last_run"', $timestamp));
+      $drush->drush('vset', array('"message_digest_1 week_last_run"', $timestamp));
+    }
+    catch (Exception $e) {
+      throw new \Exception('Setting digest last run via Drush vset command failed. ' . $e->getMessage());
+    }
+  }
+
+
+
+  /**
    * @Given /^TEST$/
    */
   public function test() {
+    try {
+      $drush = $this->getDriver();
+      $result = $drush->drush('sqlq', array('"SELECT nid FROM node n WHERE n.type = \'dataset_request\' ORDER BY nid DESC;"'));
+    }
+    catch (Exception $e) {
+      throw new \Exception('Query failed ' . $e->getMessage());
+    }
+
+    $nids = explode("\n", $result);
+
+    // remove first element which is column name 'nid'
+    array_shift($nids);
+    array_pop($nids);
+
+    $session = $this->getSession();
+
+    $no_message = array();
+    $dif_message = array();
+
+
+    foreach ($nids as $nid) {
+
+      print $nid . " | ";
+
+      $session->visit($this->locatePath('/node/' . $nid . '/edit'));
+      sleep(1);
+      $page = $this->getSession()->getPage();
+      sleep(1);
+      $last_vertical_tab = $page->find('css', '.vertical-tabs-list .last a');
+      if (is_object($last_vertical_tab)) {
+        $last_vertical_tab->click();
+        sleep(1);
+        $last_vertical_tab = $page->find('css', '.vertical-tabs-list .last a');
+
+        $moderation_state = $page->find('css', '.form-item-workbench-moderation-state-new');
+        $moderation_state->selectFieldOption('Moderation state', 'Published');
+        $page->pressButton('Save');
+        sleep(1);
+
+        $message = 'has been updated.';
+        $successSelector = $this->getDrupalSelector('success_message_selector');
+        $successSelectorObj = $this->getSession()->getPage()->find("css", $successSelector);
+        if(empty($successSelectorObj)) {
+          $no_message[] = $nid;
+        }
+        elseif (strpos(trim($successSelectorObj->getText()), $message) === FALSE) {
+          $dif_message[] = $nid;
+        }
+      }
+      else {
+        $no_message[] = $nid;
+      }
+    }
+
+    if (!empty($no_message)) {
+      print "\nNo success message on:\n";
+      print implode(' | ', $no_message);
+
+    }
+    if (!empty($dif_message)) {
+      print "\nMessage different on\n";
+      print implode(' | ', $dif_message);
+    }
+
+
   }
 
   /**
@@ -1071,12 +1204,11 @@ class FeatureContext extends Drupal\DrupalExtension\Context\DrupalContext
       new Given("that the user \"test_moderator\" is not registered"),
       new Given("I am logged in as a user \"test_moderator\" with the \"$role\" role"),
       new Given("I visit \"/admin/workbench\""),
-      new Given("I follow \"Needs Review\""),
+      new Given("I follow \"Needs review\""),
       new Given("I wait until the page loads"),
       new Given("I follow \"$title\""),
-      new Given("I wait until the page loads"),
+      new Given("I wait 2 seconds"),
       new Given("I follow \"Moderate\""),
-      new Given("I wait until the page loads"),
       new Given("I should see \"Currently there is no published revision of this node.\""),
       new Given("I should see \"Created by test_user.\""),
       new Given("I should see \"Edited by $author.\""),

@@ -34,6 +34,7 @@ function dgu_moderation_user_default_permissions() {
     'name' => 'bypass workbench moderation',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
     ),
     'module' => 'workbench_moderation',
   );
@@ -45,6 +46,17 @@ function dgu_moderation_user_default_permissions() {
       'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
       'blogger' => 'blogger',
+      'data publisher' => 'data publisher',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'moderate content from draft to published'.
+  $permissions['moderate content from draft to published'] = array(
+    'name' => 'moderate content from draft to published',
+    'roles' => array(
+      'data publisher' => 'data publisher',
+      'data request administrator' => 'data request administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -56,6 +68,7 @@ function dgu_moderation_user_default_permissions() {
       'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
       'blogger' => 'blogger',
+      'data publisher' => 'data publisher',
     ),
     'module' => 'workbench_moderation',
   );
@@ -65,7 +78,29 @@ function dgu_moderation_user_default_permissions() {
     'name' => 'moderate content from needs_review to published',
     'roles' => array(
       'administrator' => 'administrator',
+      'data publisher' => 'data publisher',
+      'data request administrator' => 'data request administrator',
       'glossary moderator' => 'glossary moderator',
+      'moderator' => 'moderator',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'moderate content from published to draft'.
+  $permissions['moderate content from published to draft'] = array(
+    'name' => 'moderate content from published to draft',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'moderator' => 'moderator',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'moderate content from published to needs_review'.
+  $permissions['moderate content from published to needs_review'] = array(
+    'name' => 'moderate content from published to needs_review',
+    'roles' => array(
+      'administrator' => 'administrator',
       'moderator' => 'moderator',
     ),
     'module' => 'workbench_moderation',
@@ -87,6 +122,7 @@ function dgu_moderation_user_default_permissions() {
     'name' => 'use workbench_moderation needs review tab',
     'roles' => array(
       'administrator' => 'administrator',
+      'data request administrator' => 'data request administrator',
       'glossary moderator' => 'glossary moderator',
       'moderator' => 'moderator',
     ),
@@ -98,6 +134,7 @@ function dgu_moderation_user_default_permissions() {
     'name' => 'view all unpublished content',
     'roles' => array(
       'administrator' => 'administrator',
+      'editor' => 'editor',
       'moderator' => 'moderator',
     ),
     'module' => 'workbench_moderation',
@@ -109,6 +146,8 @@ function dgu_moderation_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'blogger' => 'blogger',
+      'data publisher' => 'data publisher',
+      'data request administrator' => 'data request administrator',
       'glossary moderator' => 'glossary moderator',
       'moderator' => 'moderator',
     ),
@@ -120,6 +159,8 @@ function dgu_moderation_user_default_permissions() {
     'name' => 'view moderation messages',
     'roles' => array(
       'administrator' => 'administrator',
+      'data publisher' => 'data publisher',
+      'data request administrator' => 'data request administrator',
       'glossary moderator' => 'glossary moderator',
       'moderator' => 'moderator',
     ),

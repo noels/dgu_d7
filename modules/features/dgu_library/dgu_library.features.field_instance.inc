@@ -14,7 +14,7 @@ function dgu_library_field_default_field_instances() {
   $field_instances['node-resource-body'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -26,9 +26,12 @@ function dgu_library_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
+          ),
         ),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'search_result' => array(
         'label' => 'hidden',
@@ -41,6 +44,9 @@ function dgu_library_field_default_field_instances() {
           ),
           'more_link' => 0,
           'more_text' => 'Read more',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'summary_handler' => 'trim',
           'trim_length' => 250,
           'trim_options' => array(
@@ -50,7 +56,7 @@ function dgu_library_field_default_field_instances() {
           'trim_type' => 'chars',
         ),
         'type' => 'smart_trim_format',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -61,10 +67,13 @@ function dgu_library_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'trim_length' => 600,
         ),
         'type' => 'text_summary_or_trimmed',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -91,26 +100,26 @@ function dgu_library_field_default_field_instances() {
   $field_instances['node-resource-field_category'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -132,26 +141,26 @@ function dgu_library_field_default_field_instances() {
   // Exported field_instance: 'node-resource-field_comment'
   $field_instances['node-resource-field_comment'] = array(
     'bundle' => 'resource',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => '7',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => '7',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -178,26 +187,26 @@ function dgu_library_field_default_field_instances() {
   $field_instances['node-resource-field_document_type'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '6',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '6',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -219,7 +228,7 @@ function dgu_library_field_default_field_instances() {
   // Exported field_instance: 'node-resource-field_resource_file'
   $field_instances['node-resource-field_resource_file'] = array(
     'bundle' => 'resource',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -231,9 +240,12 @@ function dgu_library_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'file_default',
-        'weight' => 5,
+        'weight' => '5',
       ),
       'search_result' => array(
         'label' => 'above',
@@ -244,15 +256,18 @@ function dgu_library_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'file_default',
-        'weight' => 5,
+        'weight' => '5',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -281,26 +296,26 @@ function dgu_library_field_default_field_instances() {
   $field_instances['node-resource-field_sector'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'Please specify if the application you are submitting has been commission by public sector department, private sector or 3rd sector (voluntary/non-profit).',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -323,26 +338,26 @@ function dgu_library_field_default_field_instances() {
   $field_instances['node-resource-field_tags'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => 'A comma-separated list of terms describing this content. Example: funny, bungee jumping, "Company, Inc.".',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',

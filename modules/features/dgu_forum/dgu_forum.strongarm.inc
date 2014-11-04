@@ -47,7 +47,13 @@ function dgu_forum_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '4',
+          'weight' => '2',
+        ),
+        'mollom' => array(
+          'weight' => '9',
+        ),
+        'redirect' => array(
+          'weight' => '8',
         ),
       ),
       'display' => array(
@@ -66,6 +72,24 @@ function dgu_forum_strongarm() {
           ),
           'search_result' => array(
             'weight' => '3',
+            'visible' => FALSE,
+          ),
+        ),
+        'flag_subscribe_node' => array(
+          'default' => array(
+            'weight' => '4',
+            'visible' => TRUE,
+          ),
+          'teaser' => array(
+            'weight' => '10',
+            'visible' => FALSE,
+          ),
+          'rss' => array(
+            'weight' => '10',
+            'visible' => FALSE,
+          ),
+          'search_result' => array(
+            'weight' => '10',
             'visible' => FALSE,
           ),
         ),

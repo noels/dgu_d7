@@ -14,7 +14,7 @@ function dgu_blog_field_default_field_instances() {
   $field_instances['node-blog-body'] = array(
     'bundle' => 'blog',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -26,9 +26,12 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
+          ),
         ),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'rss' => array(
         'label' => 'hidden',
@@ -39,10 +42,13 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'trim_length' => 600,
         ),
         'type' => 'text_summary_or_trimmed',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'search_result' => array(
         'label' => 'hidden',
@@ -55,6 +61,9 @@ function dgu_blog_field_default_field_instances() {
           ),
           'more_link' => 0,
           'more_text' => 'Read more',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'summary_handler' => 'trim',
           'trim_length' => 250,
           'trim_options' => array(
@@ -64,7 +73,7 @@ function dgu_blog_field_default_field_instances() {
           'trim_type' => 'chars',
         ),
         'type' => 'smart_trim_format',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -75,10 +84,13 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'trim_length' => 600,
         ),
         'type' => 'text_summary_or_trimmed',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -106,7 +118,7 @@ function dgu_blog_field_default_field_instances() {
   $field_instances['node-blog-field_category'] = array(
     'bundle' => 'blog',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -118,27 +130,30 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'search_result' => array(
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -160,7 +175,7 @@ function dgu_blog_field_default_field_instances() {
   // Exported field_instance: 'node-blog-field_comment'
   $field_instances['node-blog-field_comment'] = array(
     'bundle' => 'blog',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -172,27 +187,30 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'reply_default',
-        'weight' => 5,
+        'weight' => '6',
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => '5',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => '5',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -218,7 +236,7 @@ function dgu_blog_field_default_field_instances() {
   // Exported field_instance: 'node-blog-field_file_attachments'
   $field_instances['node-blog-field_file_attachments'] = array(
     'bundle' => 'blog',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -230,27 +248,30 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'file_default',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '6',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -279,32 +300,32 @@ function dgu_blog_field_default_field_instances() {
   $field_instances['node-blog-field_sector'] = array(
     'bundle' => 'blog',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '7',
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '6',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -327,7 +348,7 @@ function dgu_blog_field_default_field_instances() {
   $field_instances['node-blog-field_tags'] = array(
     'bundle' => 'blog',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -339,27 +360,30 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'search_result' => array(
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -385,7 +409,7 @@ function dgu_blog_field_default_field_instances() {
   $field_instances['node-blog-field_uses_dataset'] = array(
     'bundle' => 'blog',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -398,9 +422,12 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_revision' => '',
           ),
           'link' => FALSE,
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'entityreference_label',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'rss' => array(
         'label' => 'above',
@@ -412,21 +439,24 @@ function dgu_blog_field_default_field_instances() {
             'field_replies_revision' => '',
           ),
           'link' => FALSE,
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'entityreference_label',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',

@@ -14,7 +14,7 @@ function dgu_forum_field_default_field_instances() {
   $field_instances['node-forum-body'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -26,9 +26,12 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
+          ),
         ),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'rss' => array(
         'label' => 'hidden',
@@ -39,9 +42,12 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'plain_text',
+          ),
         ),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'search_result' => array(
         'label' => 'hidden',
@@ -54,6 +60,9 @@ function dgu_forum_field_default_field_instances() {
           ),
           'more_link' => 0,
           'more_text' => 'Read more',
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'summary_handler' => 'trim',
           'trim_length' => 250,
           'trim_options' => array(
@@ -63,7 +72,7 @@ function dgu_forum_field_default_field_instances() {
           'trim_type' => 'chars',
         ),
         'type' => 'smart_trim_format',
-        'weight' => 0,
+        'weight' => '0',
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -74,10 +83,13 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
           'trim_length' => 600,
         ),
         'type' => 'text_summary_or_trimmed',
-        'weight' => 0,
+        'weight' => '0',
       ),
     ),
     'entity_type' => 'node',
@@ -96,7 +108,7 @@ function dgu_forum_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 5,
+      'weight' => '3',
     ),
   );
 
@@ -104,7 +116,7 @@ function dgu_forum_field_default_field_instances() {
   $field_instances['node-forum-field_category'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -116,9 +128,12 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'rss' => array(
         'label' => 'above',
@@ -129,21 +144,24 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'search_result' => array(
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '6',
       ),
     ),
     'entity_type' => 'node',
@@ -158,14 +176,14 @@ function dgu_forum_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 2,
+      'weight' => '5',
     ),
   );
 
   // Exported field_instance: 'node-forum-field_comment'
   $field_instances['node-forum-field_comment'] = array(
     'bundle' => 'forum',
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -177,27 +195,30 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'reply_default',
-        'weight' => 4,
+        'weight' => '5',
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '6',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => '4',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => '5',
       ),
     ),
     'entity_type' => 'node',
@@ -216,7 +237,7 @@ function dgu_forum_field_default_field_instances() {
       'module' => 'reply',
       'settings' => array(),
       'type' => 'reply',
-      'weight' => 7,
+      'weight' => '7',
     ),
   );
 
@@ -224,32 +245,32 @@ function dgu_forum_field_default_field_instances() {
   $field_instances['node-forum-field_sector'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => '6',
       ),
       'rss' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => '5',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => '5',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => '4',
       ),
     ),
     'entity_type' => 'node',
@@ -264,7 +285,7 @@ function dgu_forum_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 3,
+      'weight' => '6',
     ),
   );
 
@@ -272,7 +293,7 @@ function dgu_forum_field_default_field_instances() {
   $field_instances['node-forum-field_uses_dataset'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
@@ -285,9 +306,12 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_revision' => '',
           ),
           'link' => FALSE,
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'entityreference_label',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'rss' => array(
         'label' => 'above',
@@ -299,21 +323,24 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_revision' => '',
           ),
           'link' => FALSE,
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'entityreference_label',
-        'weight' => 3,
+        'weight' => '3',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => '2',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => '3',
       ),
     ),
     'entity_type' => 'node',
@@ -331,8 +358,8 @@ function dgu_forum_field_default_field_instances() {
         'path' => '',
         'size' => 60,
       ),
-      'type' => 'entityreference_autocomplete_tags',
-      'weight' => 6,
+      'type' => 'entityreference_autocomplete',
+      'weight' => '4',
     ),
   );
 
@@ -340,14 +367,14 @@ function dgu_forum_field_default_field_instances() {
   $field_instances['node-forum-taxonomy_forums'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
-    'deleted' => 0,
+    'deleted' => '0',
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '7',
       ),
       'rss' => array(
         'label' => 'above',
@@ -358,21 +385,24 @@ function dgu_forum_field_default_field_instances() {
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
           ),
+          'quickedit' => array(
+            'editor' => 'form',
+          ),
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'weight' => '1',
       ),
       'search_result' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => '6',
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => '2',
       ),
     ),
     'entity_type' => 'node',
@@ -386,7 +416,7 @@ function dgu_forum_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 1,
+      'weight' => '1',
     ),
   );
 

@@ -54,8 +54,9 @@ projects[ctools][subdir] = "contrib"
 # Patch prevents ctools from running filter_xss_admin on an un-rendered array.
 projects[ctools][patch][] = "http://drupal.org/files/ctools-1925018-61.patch"
 
-projects[features][version] = "2.0-rc3"
+projects[features][version] = "2.0"
 projects[features][subdir] = "contrib"
+projects[features][patch][] = "http://raw.github.com/datagovuk/dgu_d7/master/patches/features_dont_convert_strings_to_integers.patch"
 
 projects[views][version] = "3.7"
 projects[views][subdir] = "contrib"
@@ -172,6 +173,12 @@ projects[ckan][subdir] = "contrib"
 projects[ckan][patch][] = "https://raw.githubusercontent.com/noels/dgu_d7/master/patches/organograms.patch"
 
 
+projects[ckan_publisher_tree][type] = "module"
+projects[ckan_publisher_tree][download][type] = "git"
+projects[ckan_publisher_tree][download][url] = "http://git.drupal.org/project/ckan_publisher_tree.git"
+projects[ckan_publisher_tree][download][branch] = "7.x-1.x"
+projects[ckan_publisher_tree][subdir] = "contrib"
+
 projects[composer_manager][version] = "1.0-beta7"
 projects[composer_manager][subdir] = "contrib"
 
@@ -259,9 +266,18 @@ projects[message_notify][subdir] = "contrib"
 projects[message_subscribe][version] = "1.0-rc2"
 projects[message_subscribe][subdir] = "contrib"
 
-projects[message_digest][version] = "1.0"
+projects[message_digest][type] = "module"
+projects[message_digest][download][type] = "git"
+projects[message_digest][download][url] = "http://git.drupal.org/project/message_digest.git"
+projects[message_digest][download][revision] = "2ad5c154dc21028d153e455bda6c27224862bc62"
 projects[message_digest][subdir] = "contrib"
+projects[message_digest][patch][] = "https://www.drupal.org/files/issues/message_digest-remove_mail_header-2236179-8.patch"
 
+projects[quickedit][version] = "1.1"
+projects[quickedit][subdir] = "contrib"
+
+projects[autologout][version] = "4.3"
+projects[autologout][subdir] = "contrib"
 
 ; Themes
 ; --------
@@ -271,8 +287,19 @@ projects[bootstrap][download][type] = "git"
 projects[bootstrap][download][url] = "http://git.drupal.org/project/bootstrap.git"
 projects[bootstrap][download][tag] = "7.x-3.0-rc2"
 
-
+; Libraries
+; --------
 libraries[ckeditor][download][type] = "get"
 libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.2/ckeditor_4.2_full.zip"
 libraries[ckeditor][directory_name] = "ckeditor"
 libraries[ckeditor][destination] = "libraries"
+
+libraries[backbone][download][type] = "get"
+libraries[backbone][download][url] = "https://github.com/jashkenas/backbone/archive/1.1.2.zip"
+libraries[backbone][directory_name] = "backbone"
+libraries[backbone][destination] = "libraries"
+
+libraries[underscore][download][type] = "get"
+libraries[underscore][download][url] = "https://github.com/jashkenas/underscore/archive/1.6.0.zip"
+libraries[underscore][directory_name] = "underscore"
+libraries[underscore][destination] = "libraries"
