@@ -10,11 +10,53 @@
 function dgu_organogram_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'ckan_publisher-ckan_publisher-field_organogram'
+  $field_instances['ckan_publisher-ckan_publisher-field_organogram'] = array(
+    'bundle' => 'ckan_publisher',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(
+          'field_replies' => '',
+          'field_replies_settings' => array(
+            'field_replies_reply_field_name' => '',
+            'field_replies_revision' => '',
+          ),
+        ),
+        'type' => 'file_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'ckan_publisher',
+    'field_name' => 'field_organogram',
+    'label' => 'Organogram',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'xls xlsx',
+      'max_filesize' => '10 MB',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'file',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'file_generic',
+      'weight' => 0,
+    ),
+  );
+
   // Exported field_instance: 'node-organogram-body'
   $field_instances['node-organogram-body'] = array(
     'bundle' => 'organogram',
     'default_value' => NULL,
-    'deleted' => '0',
+    'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
@@ -25,9 +67,6 @@ function dgu_organogram_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
-          ),
-          'quickedit' => array(
-            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -41,9 +80,6 @@ function dgu_organogram_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
-          ),
-          'quickedit' => array(
-            'editor' => 'form',
           ),
           'trim_length' => 600,
         ),
@@ -75,7 +111,7 @@ function dgu_organogram_field_default_field_instances() {
   $field_instances['node-organogram-field_endpoint'] = array(
     'bundle' => 'organogram',
     'default_value' => NULL,
-    'deleted' => '0',
+    'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
@@ -86,9 +122,6 @@ function dgu_organogram_field_default_field_instances() {
           'field_replies_settings' => array(
             'field_replies_reply_field_name' => '',
             'field_replies_revision' => '',
-          ),
-          'quickedit' => array(
-            'editor' => 'plain_text',
           ),
         ),
         'type' => 'text_default',
@@ -124,7 +157,7 @@ function dgu_organogram_field_default_field_instances() {
   $field_instances['node-organogram-field_parent_organogram'] = array(
     'bundle' => 'organogram',
     'default_value' => NULL,
-    'deleted' => '0',
+    'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
@@ -137,9 +170,6 @@ function dgu_organogram_field_default_field_instances() {
             'field_replies_revision' => '',
           ),
           'link' => FALSE,
-          'quickedit' => array(
-            'editor' => 'form',
-          ),
         ),
         'type' => 'entityreference_label',
         'weight' => 1,
@@ -170,6 +200,7 @@ function dgu_organogram_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Body');
+  t('Organogram');
   t('Parent organogram');
   t('endpoint');
 

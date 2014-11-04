@@ -1,480 +1,743 @@
+function log(info){
+    Orgvis.vars.debug && window.console && console.log && console.log(info);
+}
+
+var Orgvis = {
+    vars: {
+        debug: true,
+        visOffsetX:180,
+        visOffsetY:0,
+        transX:0,
+        transY:0,
+        infovisId:'',
+    },
+    showSpaceTree: function(data, infovisId) {
+        //$("#infovis").width($(window).width()-0);
+        //$("#infovis").height($(window).height()-30);
+        this.vars['infovisId'] = infovisId;
+        $jit.ST.Plot.NodeTypes.implement({
+            'nodeline': {
+                'render': function(node, canvas, animating) {
+                    if(animating === 'expand' || animating === 'contract') {
+                        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
+                        var width  = nconfig.width, height = nconfig.height;
+                        var algnPos = this.getAlignedPos(pos, width, height);
+                        var ctx = canvas.getCtx(), ort = this.config.orientation;
+                        ctx.beginPath();
+                        if(ort == 'left' || ort == 'right') {
+                            ctx.moveTo(algnPos.x, algnPos.y + height / 2);
+                            ctx.lineTo(algnPos.x + width, algnPos.y + height / 2);
+                        } else {
+                            ctx.moveTo(algnPos.x + width / 2, algnPos.y);
+                            ctx.lineTo(algnPos.x + width / 2, algnPos.y + height);
+                        }
+                        ctx.stroke();
+                    }
+                }
+            }
+
+        });
+        var spaceTree = new $jit.ST({
+            'injectInto': infovisId,
+            Navigation: {
+                enable: true,
+                panning: 'avoid nodes',
+                zooming: 40
+            },
+            duration: 200,
+            fps:30,
+            orientation: 'left',
+            offsetX: Orgvis.vars.visOffsetX,
+            offsetY: Orgvis.vars.visOffsetY,
+            transition: $jit.Trans.Quad.easeIn,
+            levelDistance: 40,
+            levelsToShow: 1,
+            Node: {
+                height:80,
+                width: 177,
+                type: 'nodeline',
+                color:'#333333',
+                lineWidth: 2,
+                align:"center",
+                overridable: true
+            },
+            Edge: {
+                type: 'bezier',
+                lineWidth: 2,
+                color:'#DDDDDD',
+                overridable: true
+            },
+            request: function(nodeId, level, onComplete) {
+                console.log("request called, nodeId: " + nodeId  + " , level: " + level + "\n");
+                var ans = [];//getTree(nodeId, level);
+                onComplete.onComplete(nodeId, ans);
+            },
+            onBeforeCompute: function(node){
+            },
+            onAfterCompute: function(){
+                $("div.node").each(function(){
+                    var h = $(this).height();
+                    if(h > 60){
+                        //do nothing
+                    } else if (h > 50){
+                        $(this).css("margin-top","10px");
+                    } else if (h > 35){
+                        $(this).css("margin-top","15px");
+                    } else {
+                        $(this).css("margin-top","20px");
+                    }
+                });
+            },
+            onCreateLabel: function(label, node){
+                // If the clicked node is a node and not a junior post
+                if(typeof node.data != 'undefined' && node.data.type != 'junior_posts') {
+                    label.id = node.id;
+                    label.innerHTML = node.name;
+
+                    if(typeof node.data.grade != 'undefined'){
+                        $(label).addClass(node.data.grade);
+                    }
+
+                    if(typeof node.data.heldBy != 'undefined' && node.data.heldBy.length > 1){
+                        $(label).addClass("post_"+node.data.heldBy.toLowerCase().replace(" ","_"));
+                    } else {
+                        $(label).addClass("post_"+node.id);
+                    }
+
+                    if(typeof node.data.unit != 'undefined' && node.data.unit.length > 0){
+                        label.innerHTML = label.innerHTML + '<span class="postIn ui-state-active">'+node.data.unit+'</span>';
+                    } else {
+                        label.innerHTML = label.innerHTML + '<span class="postIn ui-state-active">?</span>';
+                    }
+
+                    // If the node is associated with junior posts
+                } else if(node.data.type == 'junior_posts'){
+
+                    $(label).addClass('juniorPost');
+                    $(label).addClass(node.data.nodeType);
+
+                    label.innerHTML = node.name;
+
+                    switch (node.data.nodeType) {
+
+                        case 'jp_child' :
+                            // Node is a Junior Post
+                            var fteTotal = Math.round(node.data.FTE*100)/100;
+                            label.innerHTML = label.innerHTML + '<span class="jp_grade">'+node.data.salaryrange+'</span><span class="heldBy">'+fteTotal+'</span>';
+                            break;
+
+                        case 'jp_parent' :
+                            // Node is a Junior Post parent
+                            label.innerHTML = label.innerHTML + '<span class="heldBy">'+node.data.fteTotal+'</span>';
+                            break;
+                    }
+
+                    //log(node.data.colour);
+                    $(label).css('color',node.data.colour);
+                } else {
+                    //log("clicked something, but not sure what!");
+                }
+
+                label.onclick = function(){
+                    var m = {
+                        offsetX: spaceTree.canvas.translateOffsetX+Orgvis.vars.visOffsetX,
+                        offsetY: spaceTree.canvas.translateOffsetY,
+                        enable: true
+                    };
+                    if(Orgvis.vars.transX != spaceTree.canvas.canvases[0].translateOffsetX ||
+                        Orgvis.vars.transY != spaceTree.canvas.canvases[0].translateOffsetY){
+                        log("Panning has occurred");
+                        Orgvis.vars.canvasPanned = true;
+                        m.offsetX -= spaceTree.canvas.canvases[0].translateOffsetX;
+                        m.offsetY -= spaceTree.canvas.canvases[0].translateOffsetY;
+                    } else {
+                        //log("Panning has not occurred");
+                    }
+
+                    switch(node.data.type) {
+
+                        default :
+                            // A post has been clicked
+                            $('#'+infovisId + " div.node").removeClass("selected");
+                            $('#'+infovisId + " div#"+node.id).addClass("selected");
+                            $('#'+infovisId + " .infobox").hide(0,function(){
+                                Orgvis.loadPostInfobox(node, infovisId);
+                            });
+
+                            spaceTree.onClick(node.id, {
+                                Move: m
+                            });
+
+                            if(Orgvis.vars.canvasPanned){
+                                spaceTree.canvas.resize($('#'+infovisId).width(), $('#'+infovisId).height());
+                                Orgvis.vars.canvasPanned = false;
+                            }
+
+                            break;
+
+                        case 'junior_posts' :
+
+                            //log('clicked junior_posts node');
+
+                            switch(node.data.nodeType){
+
+                                default :
+                                    //log('clicked junior_posts:default');
+                                    $('#'+infovisId + " .infobox").hide();
+                                    $('#'+infovisId + " div.node").removeClass("selected");
+                                    $('#'+infovisId + " div#"+node.id).addClass("selected");
+                                    st.onClick(node.id, {
+                                        Move: m
+                                    });
+                                    if(Orgvis.vars.canvasPanned){
+                                        spaceTree.canvas.resize($('#'+infovisId ).width(), $('#infovis').height());
+                                        Orgvis.vars.canvasPanned = false;
+                                    }
+                                    break;
+
+                                case 'jp_parent' :
+
+                                    // A "JUNIOR POSTS" node has been clicked
+
+                                    //log('clicked junior_posts:jp_parent');
+
+                                    $('#'+infovisId+ " .infobox").hide();
+
+                                    $('#'+infovisId+ " div.node").removeClass("selected");
+                                    $('#'+infovisId+ " div#"+node.id).addClass("selected");
+
+                                    spaceTree.onClick(node.id, {
+                                        Move: m
+                                    });
+
+                                    if(Orgvis.vars.canvasPanned){
+                                        spaceTree.canvas.resize($('#'+infovisId).width(), $('#'+infovisId).height());
+                                        Orgvis.vars.canvasPanned = false;
+                                    }
+                                    break;
+
+                                case 'jp_child' :
+
+                                    // A junior post has been clicked
+                                    //log('clicked junior_posts:jp_child');
+
+                                    $('#'+infovisId+ " div.node").removeClass("selected");
+                                    $('#'+infovisId+ " div#"+node.id).addClass("selected");
+                                    $('#'+infovisId+ " .infobox").hide(0,function(){
+                                        Orgvis.loadJuniorPostInfoBox(node,infovisId);
+                                    });
+                                    if(Orgvis.vars.canvasPanned){
+                                        spaceTree.canvas.resize($('#'+infovisId).width(), $('#'+infovisId).height());
+                                        Orgvis.vars.canvasPanned = false;
+                                    }
+                                    break;
+
+                                case 'jp_none' :
+                                    //log('clicked junior_posts:jp_none');
+                                    $('#'+infovisId).hide();
+                                    $("div.jp_group_selector").hide();
+                                    break;
+                            }
+
+                            break;
+                    }
+
+                };  // end label.onClick
+
+                var style = label.style;
+                style.width = 170 + 'px';
+            },
+            onBeforePlotNode: function(node){
+                if (node.selected) {
+                    node.data.$color = "ff7";
+                }
+                else {
+                    delete node.data.$color;
+                }
+            },
+            onBeforePlotLine: function(adj){
+                if (adj.nodeFrom.selected && adj.nodeTo.selected) {
+                    adj.data.$color = "#333333";
+                    adj.data.$lineWidth = 4;
+                }
+                else {
+                    delete adj.data.$color;
+                    delete adj.data.$lineWidth;
+                }
+            }
+
+        });
+        $(window).resize(function(){
+            //$("#infovis").width($(window).width()-0);
+            //$("#infovis").height($(window).height()-30);
+            try{
+                spaceTree.canvas.resize($('#'+infovisId).width(), $('#'+infovisId).height());
+            }
+            catch(e){}
+
+        });
+        spaceTree.loadJSON(data);
+        spaceTree.compute();
+        spaceTree.onClick(spaceTree.root);
+
+    },
+    init: function(filename){
+        OrgDataLoader.load(filename)
+    },
+    loadPostInfobox:function(node, infovisId){
+        var postID = node.data.id;
+        var postUnit, tempUnitID, tempUnitLabel;
+        tempUnitID = 'tempUnitId';
+        tempUnitLabel = 'TempUnitLabel';
+        postUnit = 'postUnit';
+
+        // Construct the HTML for the infobox
+        var html = '<h1>'+node.name+'</h1>';
+        if(node.data.heldBy.length > 0){
+            var nd = node.data;
+            html += '<div class="panel heldBy ui-accordion ui-widget ui-helper-reset ui-accordion-icons">';
+            html += '<h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all"><a class="name infobox_'+node.id+'">'+node.data.heldBy+'</a></h3>';
+            html += '<div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom">';
+            html += '<p class="id"><span>Post ID</span><span class="value">'+node.id+ '</span></p>';
+            if(typeof nd.grade != 'undefined'){
+                html += '<p class="grade"><span>Grade</span><span class="value">'+nd.grade+'</span></p>';
+            }
+            if(typeof nd.payfloor != 'undefined' && typeof nd.payceiling != 'undefined'){
+                html += '<p class="salary"><span>Salary</span><span class="value">'+nd.payfloor+' - '+nd.payceiling+'</span></p>';
+            }
+            if(typeof nd.combinedSalaryOfReports != 'undefined'){
+                html += '<p class="salaryReports"><span>Combined salary of reporting posts</span><span class="value">'+nd.stats.salaryCostOfReports.formatted+'</span><a class="data" target="_blank" href="http://'+Orgvis.vars.apiBase+'/doc/'+Orgvis.vars.global_typeOfOrg+'/'+Orgvis.vars.global_postOrg+'/post/'+tempID+'/statistics" value="'+nd.stats.salaryCostOfReports.value+'">Data</a><span class="date">'+nd.stats.date.formatted+'</span></p>';
+            }
+            html += '</div><!-- end content -->';
+            html+= '</div><!-- end panel -->';
+            html+= '<a class="close">x</a>';
+        }
+
+        $('#'+infovisId + " .infobox").html(html);
+        Orgvis.setInfoBoxLinks(infovisId);
+        $('#'+infovisId + " .infobox").show();
+        $('#'+infovisId + " div.heldBy").show();
+
+    },
+    loadJuniorPostInfoBox:function(node, infovisId){
+        // Construct the HTML for the infobox
+        var nd = node.data;
+        var html = '<h1>'+node.name+'</h1>';
+        html += '<div class="panel ui-accordion ui-widget ui-helper-reset ui-accordion-icons">';
+        html += '<div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-corner-top">';
+        if(typeof nd.profession_group != 'undefined'){
+            html += '<p class="profession"><span>Profession</span><span class="value">'+nd.profession_group+'</span></p>';
+        }
+        html += '<p class="fte"><span>Full Time Equivalent</span><span class="value">'+nd.FTE+'</span></p>';
+        html += '<p class="grade"><span>Grade</span><span class="value">'+nd.grade+'</span></p>';
+        html += '<p class="paybandRange"><span>Payband Salary Range</span><span class="value">'+nd.salaryrange+'</span></p>';
+        html += '<p class="reportsTo"><span>Reports To</span><span class="value">'+nd.reportsto+'</span></p>';
+        html += '<p class="unit"><span>Unit</span><span class="value">'+nd.unit+'</span></p>';
+        html += '</div>'; // end content
+        html += '</div>'; // end panel
+        html += '<a class="close">x</a>';
+
+        $('#'+infovisId + " .infobox").html(html);
+        Orgvis.setInfoBoxLinks(infovisId);
+        $('#'+infovisId + " .infobox").show();
+        $('#'+infovisId + " .infobox div.content").show();
+    },
+    setInfoBoxLinks:function(infovisId) {
+        var infovisId = this.vars['infovisId'];
+        $("a.close").click(function(){
+            $(this).parent().fadeOut();
+        });
+        //$('div.heldBy').accordion({clearStyle:true, navigation:true, autoHeight:false, collapsible:true, active:true});
+        $('.ui-state-default').mouseout(function(){$(this).removeClass('ui-state-focus')});
+        $('div.panel h3').eq(0).click();
+        if($.browser.msie){
+            $('#'+infovisId + " div.infobox").corner();
+        }
+        return false;
+    }
+
+};
+
+var OrgDataLoader = {
+    docBase: "/organogram/preview/",
+    load: function (filename, infovisId) {
+        $.ajax({cache: false, dataType: "json", url: this.docBase+filename, success : function(ret){
+            var data = ret.data;
+            $.ajax({url: OrgDataLoader.docBase + "data/" + data.value + "-senior.csv",
+                success : function(seniorcsv){
+                    Papa.parse(seniorcsv, {
+                        header: true, delimiter: ',',
+                        complete: function(seniorrows) {
+                            senior = seniorrows.data;
+                            $.ajax({url: OrgDataLoader.docBase + "data/" + data.value + "-junior.csv",
+                                success : function(juniorcsv){
+                                    Papa.parse(juniorcsv, {
+                                        header: true, delimiter: ',',
+                                        complete: function(juniorrows) {
+                                            junior = juniorrows.data;
+                                            $('.chart .ajax-progress').remove();
+                                            Orgvis.showSpaceTree(OrgDataLoader.buildTree(data.name), infovisId);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }});
+    },
+
+    buildTree: function(department) {
+        var hierarchy = {};
+        var tree = [];
+        var processed = [];
+        var seniorPosts = {};
+        function getChildren(postRef){
+            var children = [];
+            var juniorPosts = {
+                id:postRef+"_"+"junior_posts",
+                name:"Junior Posts",
+                data:{
+                    total:0,
+                    fteTotal:0,
+                    nodeType:'jp_parent',
+                    type:'junior_posts',
+                    colour:'#FFFFFF',
+                },
+                children:[]
+            };
+
+            if (hierarchy[postRef]){
+                hierarchy[postRef].forEach(function(post, index, array) {
+                    if (post.data['senior']){
+                        processed.push(post.id);
+                        post['children'] = getChildren(post.id);
+                        children.push(post);
+                    } else {
+                        post.data.FTE = Math.round(post.data.FTE*100)/100;
+                        juniorPosts.children.push(post);
+                        juniorPosts.data.fteTotal += post.data.FTE;
+                    }
+                });
+            }
+            if (juniorPosts.children.length > 0){
+                juniorPosts.data.fteTotal = Math.round(juniorPosts.data.fteTotal*100)/100;
+                children.push(juniorPosts);
+            }
+            return children;
+        }
+
+        function createSeniorPostNode(post){
+            var seniorPost = {
+                'id':post['Post Unique Reference'],
+                'name': post['Job Title'],
+                'data':{
+                    'heldBy': post['Name'],
+                    'grade': post['Grade'],
+                    'function': post['Job/Team Function'],
+                    'FTE': + post['FTE']*100/100,
+                    'unit': post['Unit'],
+                    'organisation': post['Organisation'],
+                    'payfloor': post['Actual Pay Floor (£)'],
+                    'payceiling': post['Actual Pay Ceiling (£)'],
+                    'reportsto': post['Reports to Senior Post'],
+                    'senior' : true,
+                    'type': 'senior_posts'
+                }
+            }
+            seniorPosts[seniorPost.id] = seniorPost;
+            return seniorPost;
+        }
+        Number.prototype.formatMoney = function(c, d, t, s){
+            var n = this,
+                s = s == undefined ? "&pound;" : s,
+                c = isNaN(c = Math.abs(c)) ? 2 : c,
+                d = d == undefined ? "." : d,
+                t = t == undefined ? "," : t,
+                b = n < 0 ? "-" : "",
+                i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+                j = (j = i.length) > 3 ? j % 3 : 0;
+            return s + b + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+        };
+
+        function getSalaryRange(post){
+            var floor = post["Payscale Minimum (£)"] * 100 / 100;
+            var ceil = post['Payscale Maximum (£)'] * 100 / 100;
+
+            return floor.formatMoney(0) + " - " + ceil.formatMoney(0);
+        }
+
+        function createJuniorPostNode(post){
+            return {
+                'name': post['Generic Job Title'],
+                'id': post['Reporting Senior Post']+"_"+post['Grade'],
+                'data':{
+                    'reportsto': seniorPosts[post['Reporting Senior Post']].name,
+                    'grade': post['Grade'],
+                    'FTE': + post['Number of Posts in FTE'],
+                    'unit': post['Unit'],
+                    'payfloor': post['Payscale Minimum (£)'],
+                    'payceiling': post['Payscale Maximum (£)'],
+                    'salaryrange': getSalaryRange(post),
+                    'profession_group': post['Professional/Occupational Group'],
+                    'junior': true,
+                    'nodeType': 'jp_child',
+                    'type': 'junior_posts'
+                }
+            }
+        }
+
+        senior.forEach(function(post, index, array) {
+            reportsTo = post['Reports to Senior Post'];
+            if (null == hierarchy[reportsTo]){
+                hierarchy[reportsTo] = [];
+            }
+            hierarchy[reportsTo].push(createSeniorPostNode(post));
+        });
+        junior.forEach(function(post, index, array) {
+            reportsTo = post['Reporting Senior Post'];
+            if (null == hierarchy[reportsTo]){
+                hierarchy[reportsTo] = [];
+            }
+            hierarchy[reportsTo].push(createJuniorPostNode(post));
+        });
+        //At this point hierarchy contains a map of senior posts with their reporting post and a list of
+        //junior posts who report to them.
+        senior.forEach(function(post, index, array) {
+            var postUR = post['Post Unique Reference'];
+            var children = getChildren(postUR);
+            if (-1 == processed.indexOf(postUR)){
+                var seniorPost = createSeniorPostNode(post);
+                seniorPost.children = children;
+                tree.push(seniorPost);
+            }
+        });
+        return tree[0];
+    }
+};
+
 (function($) {
-    var $previewPane = null;
-    var $previewButton = null;
-    var previewShowClass = 'organogram-preview--show';
+
+    if (!Array.prototype.forEach) {
+        Array.prototype.forEach = function (fn, scope) {
+            var len = this.length;
+
+            for (var i = 0; i < len; i++) {
+                fn.call(scope || this, this[i], i, this);
+            }
+        };
+    }
+
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+            if (this === null || this === undefined) {
+                throw new TypeError();
+            }
+
+            var t = new Object(this);
+            var len = t.length >>> 0;
+
+            if (len === 0) {
+                return -1;
+            }
+
+            var n = 0;
+            if (arguments.length > 0) {
+                n = Number(arguments[1]);
+                if (n != n) { // shortcut for verifying if it's NaN
+                    n = 0;
+                } else if (n !== 0 && n != Infinity && n != -Infinity) {
+                    n = (n > 0 || -1) * Math.floor(Math.abs(n));
+                }
+            }
+
+            if (n >= len) {
+                return -1;
+            }
+
+            var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+            for (; k < len; k++) {
+                if (k in t && t[k] === searchElement) {
+                    return k;
+                }
+            }
+
+        };
+    }
+
+    var previewButton = null;
+    var previewShowClass = 'preview--show';
+    var junior = null;
+    var senior = null;
+    var previewMarkup =
+        '<tr class="preview"><td colspan="3">'+
+            '  <div class="organogram-preview">'+
+            '    <input type="button" class="organogram-preview-close" value="&times;">'+
+            '    <div class="chart">'+
+            '      <div class="infovis">'+
+            '      <div class="infobox">' +
+            '        <a class="close">x</a>' +
+            '      </div></div>' +
+            '    </div>'+
+            '  </div>'+
+            '</td></tr>';
 
 //    TODO make stuff like the render size be defined up here
 
     Drupal.behaviors.ckanPublisherTogglePreview = {
         attach: function (context, settings) {
             console.log(settings);
-            $previewButton = $('.js-organogram-preview-btn');
-            $previewPane =  $('.' + $previewButton.attr('data-toggle-pane'));
+            previewButton = $('.js-organogram-preview-btn');
 
             // Preview
-            $previewButton.on('click', function(){
-                Drupal.behaviors.ckanPublisherTogglePreview.showLightbox();
+            previewButton.one('click', function(){
+                var preview =  $(this).parent().parent().after(previewMarkup);
+                var previewPanel = $(this).parent().parent().next();
+                var previewPanelId = $(this).attr('id') + '-tr';
+                previewPanel.attr('id', previewPanelId);
+                var infovisId = $(this).attr('id') + '-infovis';
+                $('#' + previewPanelId + ' .infovis').attr('id', infovisId);
+                previewPanel.addClass(previewShowClass);
+
+                previewPanel.find('.organogram-preview-close').on('click', function(){
+                    previewPanel.removeClass(previewShowClass);;
+                });
+                $(this).on('click', function(){
+                    previewPanel.addClass(previewShowClass);
+                });
+
 
                 var filename = $(this).attr('data-organogram-file');
-                $('#organogram-viz').empty().append('<div class="ajax-progress"><div class="throbber">&nbsp;</div></div>');
-                $.ajax("/organogram/preview/"+filename).done(function(ret){
-                    var data = ret.data;
-                    $('#organogram-viz .ajax-progress').remove();
-                    viz.setActiveOrganogram(data.value, data.name);
-                });
+                $('.chart').append('<div class="ajax-progress"><div class="throbber">&nbsp;</div></div>');
+                OrgDataLoader.load(filename, infovisId);
             });
-
-            //Esc Key
-            $(document).keyup(function(e) {
-                if (e.keyCode == 27) { // esc keycode
-                    Drupal.behaviors.ckanPublisherTogglePreview.dismissLightbox();
-                }
-            });
-
-            $('.organogram-preview-close').on('click', function(){
-                Drupal.behaviors.ckanPublisherTogglePreview.dismissLightbox();
-            });
-
-        },
-        showLightbox: function() {
-            $previewPane.addClass(previewShowClass);
         },
 
-        dismissLightbox: function() {
-            $previewPane.removeClass(previewShowClass);
-        }
-
-
-    };
-})(jQuery);
-
-
-(function() {
-    var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-    if (window.viz == null) {
-        window.viz = {};
-    }
-
-    viz.shallowCopy = function(object) {
-        var k, out, v;
-        out = {};
-        for (k in object) {
-            v = object[k];
-            out[k] = v;
-        }
-        return out;
-    };
-
-    viz.trim = function(x, maxlen) {
-        if ((maxlen >= 0) && (x.length > maxlen)) {
-            return x.substr(0, maxlen) + '...';
-        }
-        return x;
-    };
-
-    viz.money_to_string = function(amount) {
-        var out;
-        out = '';
-        amount = String(amount);
-        while (amount.length > 3) {
-            out = ',' + amount.substring(amount.length - 3) + out;
-            amount = amount.substring(0, amount.length - 3);
-        }
-        return amount + out;
-    };
-
-    d3.selection.prototype.moveToBack = function() {
-        return this.each(function() {
-            var firstChild;
-            firstChild = this.parentNode.firstChild;
-            if (firstChild) {
-                return this.parentNode.insertBefore(this, firstChild);
+        buildTree: function(department) {
+            var hierarchy = {};
+            var tree = [];
+            var processed = [];
+            function getChildren(postRef){
+                var children = [];
+                if (hierarchy[postRef]){
+                    hierarchy[postRef].forEach(function(post, index, array) {
+                        if (post['ref']){
+                            processed.push(post['ref']);
+                            post['children'] = getChildren(post['ref']);
+                        }
+                        children.push(post);
+                    });
+                }
+                return children;
             }
-        });
-    };
 
-    viz.setActiveOrganogram = function(slug, title) {
-        window.location.hash = title;
-        viz.activeOrganogram = {
-            junior: null,
-            senior: null,
-            slug: slug,
-            title: title
-        };
-        d3.csv("/organogram/preview/data/" + slug + "-senior.csv", function(senior) {
-            if (viz.activeOrganogram.slug === slug) {
-                viz.activeOrganogram.senior = senior;
-                return viz.renderActiveOrganogram();
-            }
-        });
-        return d3.csv("/organogram/preview/data/" + slug + "-junior.csv", function(junior) {
-            if (viz.activeOrganogram.slug === slug) {
-                viz.activeOrganogram.junior = junior;
-                return viz.renderActiveOrganogram();
-            }
-        });
-    };
-
-    viz.renderActiveOrganogram = function() {
-        var junior, lookup, parent, root, row, senior, _i, _j, _k, _len, _len1, _len2;
-        senior = viz.activeOrganogram.senior;
-        junior = viz.activeOrganogram.junior;
-        if (!(senior && junior)) {
-            return;
-        }
-        d3.select("#organogram-title").text("Viewing: " + viz.activeOrganogram.title);
-        root = null;
-        lookup = {};
-        for (_i = 0, _len = senior.length; _i < _len; _i++) {
-            row = senior[_i];
-            lookup[row['Post Unique Reference']] = row;
-            row['children'] = [];
-        }
-        for (_j = 0, _len1 = senior.length; _j < _len1; _j++) {
-            row = senior[_j];
-            parent = row['Reports to Senior Post'];
-            row.senior = true;
-            row.name = row['Job Title'] || '(unknown)';
-            row.value = row['Actual Pay Floor (Â£)'];
-            if (parent.toLowerCase() === 'xx') {
-                root = row;
-            } else {
-                lookup[parent]['children'].push(row);
-            }
-        }
-        for (_k = 0, _len2 = junior.length; _k < _len2; _k++) {
-            row = junior[_k];
-            row.senior = false;
-            row.name = row['Generic Job Title'] || '(unknown)';
-            row.value = row['Payscale Minimum (Â£)'];
-            parent = row['Reporting Senior Post'];
-            lookup[parent]['children'].push(row);
-        }
-        return new viz.organogram(root);
-    };
-
-    window.viz.organogram = (function() {
-        organogram.prototype.width = 940;
-
-        organogram.prototype.height = 800;
-
-        organogram.prototype.radius = 270;
-
-        organogram.prototype.pw = 130;
-
-        organogram.prototype.ph = 14;
-
-        organogram.prototype.offset = function(y) {
-            return (y * y) / this.radius;
-        };
-
-        organogram.prototype.color = d3.scale.category20c();
-
-        function organogram(raw_root) {
-            this.renderTreeMap = __bind(this.renderTreeMap, this);
-            this.renderOrgChart = __bind(this.renderOrgChart, this);
-            this.setData = __bind(this.setData, this);
-            this.linkPath = __bind(this.linkPath, this);
-            this.hoverPersonOut = __bind(this.hoverPersonOut, this);
-            this.hoverPerson = __bind(this.hoverPerson, this);
-            this.buildTreeMap = __bind(this.buildTreeMap, this);
-            this.buildOrgChart = __bind(this.buildOrgChart, this);
-            this.offset = __bind(this.offset, this);
-            var btnz, intro,
-                _this = this;
-            this.orgChart = this.buildOrgChart(raw_root, '', 'root');
-            this.treeMap = this.buildTreeMap(this.orgChart);
-            this.container = d3.select('#organogram-viz');
-            this.svg = d3.select('#organogram-viz').append('svg').attr('width', this.width).attr('height', this.height).append('g').attr('transform', "translate(" + (this.width / 2) + "," + (this.height / 2) + ")");
-            this.defs = this.svg.append('defs');
-            if (d3.select('.organogram-button:checked').attr('value') === 'option2') {
-                this.renderTreeMap(intro = true);
-            } else {
-                this.renderOrgChart(intro = true);
-            }
-            btnz = d3.selectAll('.organogram-button');
-            btnz.on('click', function(_x, index) {
-                btnz.classed('active', function(_x, i) {
-                    return i === index;
+            senior.forEach(function(post, index, array) {
+                reportsTo = post['Reports to Senior Post'];
+                if (null == hierarchy[reportsTo]){
+                    hierarchy[reportsTo] = [];
+                }
+                hierarchy[reportsTo].push({
+                    'jobtitle' : post['Job Title'],
+                    'name' : post['Name'],
+                    'grade' : post['Grade'],
+                    'FTE': + post['FTE'],
+                    'unit': post['Unit'],
+                    'payfloor': post['Actual Pay Floor (£)'],
+                    'payceiling': post['Actual Pay Ceiling (£)'],
+                    'ref' : post['Post Unique Reference'],
+                    'reportsto': post['Reports to Senior Post'],
+                    'senior' : true
                 });
-                if (index === 0) {
-                    console.log("rendering orgchart.");
-                    return _this.renderOrgChart();
-                } else {
-                    console.log("rendering treemap.");
-                    return _this.renderTreeMap();
+            });
+            junior.forEach(function(post, index, array) {
+                reportsTo = post['Reporting Senior Post'];
+                if (null == hierarchy[reportsTo]){
+                    hierarchy[reportsTo] = [];
+                }
+                hierarchy[reportsTo].push({
+                    'jobtitle': post['Generic Job Title'],
+                    'reportsto': reportsTo,
+                    'grade': post['Grade'],
+                    'FTE': + post['Number of Posts in FTE'],
+                    'unit': post['Unit'],
+                    'payfloor': post['Payscale Minimum (£)'],
+                    'payceiling': post['Payscale Maximum (£)'],
+                    'junior': true
+                });
+            });
+            //At this point hierarchy contains a map of senior posts with their reporting post and a list of
+            //junior posts who report to them.
+            senior.forEach(function(post, index, array) {
+                var postUR = post['Post Unique Reference'];
+                var children = getChildren(postUR);
+                if (-1 == processed.indexOf(postUR)){
+                    tree.push({
+                        'jobtitle' : post['Job Title'],
+                        'name' : post['Name'],
+                        'grade' : post['Grade'],
+                        'FTE': + post['FTE'],
+                        'unit': post['Unit'],
+                        'payfloor': post['Actual Pay Floor (£)'],
+                        'payceiling': post['Actual Pay Ceiling (£)'],
+                        'ref' : post['Post Unique Reference'],
+                        'reportsto': post['Reports to Senior Post'],
+                        'children' : children,
+                        'senior' : true
+                    });
                 }
             });
-            this.hoverBox = this.container.append('div').classed('hoverbox', true);
+            return  {
+                'jobtitle': department,
+                'children': tree
+            }
         }
+    };
 
-        organogram.prototype.buildOrgChart = function(d, parentId, myId) {
-            var child, i, out;
-            out = {
-                original: d,
-                name: d.name,
-                value: d.value,
-                key: myId,
-                group: parentId,
-                isLeaf: true
-            };
-            if (d.children && d.children.length) {
-                out.isLeaf = false;
-                out.group = myId;
-                out.children = (function() {
-                    var _i, _len, _ref, _results;
-                    _ref = d.children;
-                    _results = [];
-                    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-                        child = _ref[i];
-                        _results.push(this.buildOrgChart(child, myId, "" + myId + "." + i));
+    Drupal.behaviors.organogramConfirm = {
+        attach: function(context, settings) {
+            $("input[name$='upload_button']").unbind('mousedown');
+            $("input[name$='upload_button']").mousedown(function (element) {
+                var ajax = Drupal.ajax[$(element.srcElement).attr('id')];
+                Drupal.behaviors.organogramConfirm.originalSuccess = ajax.options.success;
+                ajax.options.success = function(response, status) {
+                    Drupal.behaviors.organogramConfirm.originalSuccess(response, status);
+                    $('input#edit-submit.btn.btn-primary.form-submit').click();
+                }
+                ajax.form.ajaxSubmit(ajax.options);
+            });
+            $("input[name$='remove_button']").unbind('mousedown');
+            $("input[name$='remove_button']").mousedown(function (element) {
+                var ajax = Drupal.ajax[$(element.srcElement).attr('id')];
+                if (confirm('Are you sure you want to remove this organogram?')) {
+                    Drupal.behaviors.organogramConfirm.originalSuccess = ajax.options.success;
+                    ajax.options.success = function(response, status) {
+                        Drupal.behaviors.organogramConfirm.originalSuccess(response, status);
+                        $('input#edit-submit.btn.btn-primary.form-submit').click();
                     }
-                    return _results;
-                }).call(this);
-            }
-            return out;
-        };
+                    ajax.form.ajaxSubmit(ajax.options);
+                    return true;
+                }
+                // Prevent default action.
+                return false;
+            });
+        }
+    };
+    OrgDataLoader.docBase = '/organogram/preview/';
 
-        organogram.prototype.buildTreeMap = function(d) {
-            var child, myself, out, _i, _len, _ref;
-            if (!d.children) {
-                return d;
-            }
-            out = {
-                key: "tmp-" + d.key,
-                children: []
-            };
-            myself = viz.shallowCopy(d);
-            myself.children = void 0;
-            out.children.push(myself);
-            _ref = d.children;
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                child = _ref[_i];
-                out.children.push(this.buildTreeMap(child));
-            }
-            return out;
-        };
+    $.fn.listHandlers = function(events, outputFunction) {
+        return this.each(function(i){
+            var elem = this,
+                dEvents = $(this).data('events');
+            if (!dEvents) {return;}
+            $.each(dEvents, function(name, handler){
+                if((new RegExp('^(' + (events === '*' ? '.+' : events.replace(',','|').replace(/^on/i,'')) + ')$' ,'i')).test(name)) {
+                    $.each(handler, function(i,handler){
+                        outputFunction(elem, '\n' + i + ': [' + name + '] : ' + handler );
+                    });
+                }
+            });
+        });
+    };
 
-        organogram.prototype.hoverPerson = function() {
-            var parent;
-            parent = this;
-            return function(d, i) {
-                var bbox, bbox_parent, email_link, left, space, top, w;
-                window.clearTimeout(window.viz.organogram_hover_timeout);
-                if (parent.hovering === d.original) {
-                    return;
-                }
-                parent.hovering = d.original;
-                w = 280;
-                space = 20;
-                bbox = this.getBoundingClientRect();
-                bbox_parent = parent.container[0][0].getBoundingClientRect();
-                if ((bbox.left - bbox_parent.left + bbox.width / 2) > (bbox_parent.width / 2)) {
-                    left = bbox.left - bbox_parent.left - w - space;
-                } else {
-                    left = bbox.left - bbox_parent.left + bbox.width + space;
-                }
-                left = Math.max(0, Math.min(bbox_parent.width - w, left));
-                top = bbox.top - bbox_parent.top + bbox.height / 2 - (d.original.senior ? 100 : 50);
-                top = Math.max(-50, Math.min(bbox_parent.height - 100, top));
-                parent.hoverBox.style({
-                    display: 'block',
-                    left: Math.round(left) + 'px',
-                    top: Math.round(top) + 'px'
-                });
-                email_link = function(x) {
-                    return x;
-                };
-                if (d.original.senior) {
-                    return parent.hoverBox.html("          <table class=\"table table-bordered table-condensed\">            <tr><td>Job&nbsp;Title</td><td>" + d.original['Job Title'] + "</td></tr>            <tr><td>Unit</td><td>" + d.original['Unit'] + "</td></tr>            <tr><td>Profession</td><td>" + d.original['Professional/Occupational Group'] + "</td></tr>            <tr><td>Salary</td><td>Â£" + (viz.money_to_string(d.original['Actual Pay Floor (Â£)'])) + " - Â£" + (viz.money_to_string(d.original['Actual Pay Ceiling (Â£)'])) + "</td></tr>            <tr><td>Type</td><td><em>Senior Civil Servant</em></td></tr>            <tr><td colspan=\"2\" style=\"text-align: left;font-weight:normal;font-style:italic;\">" + d.original['Job/Team Function'] + "</td></tr>            <tr><td>Name</td><td>" + d.original['Name'] + "</td></tr>            <tr><td>Grade</td><td>" + d.original['Grade'] + "</td></tr>            <tr><td>#&nbsp;Roles</td><td>" + d.original['FTE'] + " (full-time equivalent)</td></tr>            <tr><td>Phone</td><td>" + d.original['Contact Phone'] + "</td></tr>            <tr><td>Email</td><td>" + (email_link(d.original['Contact E-mail'])) + "</td></tr>          </table>");
-                } else {
-                    return parent.hoverBox.html("          <table class=\"table table-bordered table-condensed\">            <tr><td>Job&nbsp;Title</td><td>" + d.original['Generic Job Title'] + "</td></tr>            <tr><td>Unit</td><td>" + d.original['Unit'] + "</td></tr>            <tr><td>Profession</td><td>" + d.original['Professional/Occupational Group'] + "</td></tr>            <tr><td>Salary</td><td>Â£" + (viz.money_to_string(d.original['Payscale Minimum (Â£)'])) + " - Â£" + (viz.money_to_string(d.original['Payscale Maximum (Â£)'])) + "</td></tr>            <tr><td>Type</td><td><em>Junior Civil Servant</em></td></tr>            <tr><td>Grade</td><td>" + d.original['Grade'] + "</td></tr>            <tr><td>#&nbsp;Roles</td><td>" + d.original['Number of Posts in FTE'] + " (full-time equivalent)</td></tr>          </table>");
-                }
-            };
-        };
-
-        organogram.prototype.hoverPersonOut = function(d, i) {
-            var _this = this;
-            window.clearTimeout(window.viz.organogram_hover_timeout);
-            this.hovering = null;
-            return window.viz.organogram_hover_timeout = window.setTimeout((function() {
-                return _this.hoverBox.style('display', 'none');
-            }), 300);
-        };
-
-        organogram.prototype.linkPath = function(d) {
-            var point, sx, sy, tx, ty;
-            if (this.linkline == null) {
-                this.linkline = d3.svg.line().interpolate('basis');
-            }
-            sx = (d.source.x - 90) * Math.PI / 180;
-            sy = this.offset(d.source.y);
-            tx = (d.target.x - 90) * Math.PI / 180;
-            ty = this.offset(d.target.y);
-            if (sy === 0) {
-                sx = tx;
-            }
-            point = function(angle, offset) {
-                return [Math.cos(angle) * offset, Math.sin(angle) * offset];
-            };
-            return this.linkline([point(sx, sy), point(sx, sy + 80), point(tx, ty - 40), point(tx, ty)]);
-        };
-
-        organogram.prototype.setData = function(persons, links) {
-            var bgcol, clippath_selection, g_enter, invertText, key, link_selection, person_selection,
-                _this = this;
-            clippath_selection = this.defs.selectAll('.clipRect').data(persons, key = function(d) {
-                return d.key;
-            });
-            clippath_selection.exit().remove();
-            clippath_selection.enter().append('clipPath').classed('clipRect', true).attr('id', function(d) {
-                return d.key;
-            }).append('rect').attr('width', this.pw).attr('height', this.ph);
-            link_selection = this.svg.selectAll(".link").data(links, key = function(d) {
-                return d.target.key;
-            });
-            link_selection.exit().transition().duration(500).style('opacity', 0).remove();
-            link_selection.enter().append("path").classed("link", true).attr('fill', 'none').attr('stroke', 'rgba(0,0,0,0.2)').attr("d", this.linkPath).style('opacity', 0).moveToBack();
-            bgcol = function(d) {
-                var out;
-                out = d3.rgb(_this.color(d.group));
-                if (d.isLeaf) {
-                    return out;
-                } else {
-                    return out.darker(0.6);
-                }
-            };
-            invertText = function(d) {
-                return d3.hsl(bgcol(d)).l < 0.7;
-            };
-            person_selection = this.svg.selectAll('.person').data(persons, key = function(d) {
-                return d.key;
-            });
-            person_selection.exit().remove();
-            g_enter = person_selection.enter().append('g').classed('person', true).attr('clip-path', function(d) {
-                return "url(#" + d.key + ")";
-            });
-            g_enter.append('rect').style('display', function(d) {
-                if (d.name) {
-                    return 'inline';
-                } else {
-                    return 'none';
-                }
-            }).attr('fill', bgcol).on('mouseover', this.hoverPerson()).on('mouseout', this.hoverPersonOut);
-            g_enter.append('text').style('display', function(d) {
-                if (d.name) {
-                    return 'inline';
-                } else {
-                    return 'none';
-                }
-            }).classed('invertText', invertText).attr('dx', '2px').attr('dy', '1.2em').style('font-size', '9px').text(function(d) {
-                return d.name;
-            });
-            return g_enter.append('text').style('display', function(d) {
-                if (d.name) {
-                    return 'inline';
-                } else {
-                    return 'none';
-                }
-            }).classed('invertText', invertText).attr('dx', '2px').attr('dy', '2.4em').style('font-size', '9px').text(function(d) {
-                if (!d.name) {
-                    return null;
-                } else {
-                    return 'Â£' + viz.money_to_string(d.value);
-                }
-            });
-        };
-
-        organogram.prototype.renderOrgChart = function(intro) {
-            var duration, nodes, orgLayout, ripple,
-                _this = this;
-            if (intro == null) {
-                intro = false;
-            }
-            orgLayout = d3.layout.cluster().size([360, this.radius]);
-            nodes = orgLayout.nodes(this.orgChart);
-            ripple = function(d, i) {
-                i = nodes.length - i;
-                return i * 14;
-            };
-            duration = 500;
-            if (intro) {
-                duration = 0;
-                ripple = function() {
-                    return 0;
-                };
-            }
-            this.setData(nodes, orgLayout.links(nodes));
-            this.svg.selectAll(".link").transition().transition().duration(duration * 5).delay(intro ? 0 : 1000).style('opacity', 1);
-            this.svg.selectAll('.person').attr('display', 'inline').transition().duration(duration).delay(ripple).attr('transform', function(d) {
-                if (d.y === 0) {
-                    return "translate(" + (-_this.pw / 2) + "," + (-_this.ph / 2) + ")";
-                }
-                if (d.x < 180) {
-                    return "translate(0," + (-_this.ph / 2) + ")rotate(" + (d.x - 90) + ",0," + (_this.ph / 2) + ")translate(" + (_this.offset(d.y)) + ")";
-                } else {
-                    return "translate(0," + (-_this.ph / 2) + ")rotate(" + (d.x - 270) + ",0," + (_this.ph / 2) + ")translate(" + (-_this.offset(d.y) - _this.pw) + ")";
-                }
-            });
-            this.svg.selectAll('.person').select('rect').transition().duration(duration).delay(ripple).attr('width', this.pw).attr('height', this.ph);
-            return this.svg.selectAll('.clipRect').select('rect').transition().duration(duration).delay(ripple).attr('width', this.pw).attr('height', this.ph);
-        };
-
-        organogram.prototype.renderTreeMap = function(intro) {
-            var duration, groups, node, nodes, ripple, treemap, _i, _len,
-                _this = this;
-            if (intro == null) {
-                intro = false;
-            }
-            treemap = d3.layout.treemap().size([this.width, this.height]).sticky(true).value(function(d) {
-                return d.value;
-            });
-            nodes = treemap.nodes(this.treeMap);
-            groups = [];
-            for (_i = 0, _len = nodes.length; _i < _len; _i++) {
-                node = nodes[_i];
-                if (groups.indexOf(node.group) < 0) {
-                    groups.push(node.group);
-                }
-            }
-            this.setData(nodes, []);
-            duration = 500;
-            ripple = function(d, i) {
-                var index;
-                return i * 14;
-                index = groups.indexOf(d.group);
-                return (index % groups.length) * 260;
-            };
-            if (intro) {
-                duration = 0;
-                ripple = function() {
-                    return 0;
-                };
-            }
-            this.svg.selectAll('.person').attr('display', function(d) {
-                if (d.value) {
-                    return 'inline';
-                } else {
-                    return 'none';
-                }
-            }).transition().duration(duration).delay(ripple).attr('transform', function(d) {
-                return "translate(" + (d.x - _this.width / 2) + "," + (d.y - _this.height / 2) + ")";
-            });
-            this.svg.selectAll('.person').select('rect').transition().duration(duration).delay(ripple).attr('width', function(d) {
-                return d.dx;
-            }).attr('height', function(d) {
-                return d.dy;
-            });
-            return this.svg.selectAll('.clipRect').select('rect').transition().duration(duration).delay(ripple).attr('width', function(d) {
-                return Math.max(0, d.dx - 1);
-            }).attr('height', function(d) {
-                return Math.max(0, d.dy - 1);
-            });
-        };
-
-        return organogram;
-
-    })();
-
-}).call(this);
+})(jQuery);

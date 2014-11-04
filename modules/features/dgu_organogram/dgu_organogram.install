@@ -40,6 +40,12 @@ function dgu_organogram_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'signoff_date' => array(
+        'description' => 'The Unix timestamp of the Publish date for this organogram.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
   );
 
@@ -48,6 +54,10 @@ function dgu_organogram_schema() {
 
 
 function dgu_organogram_update_1001() {
+  $schema = module_invoke('dgu_organogram', 'schema');
+  db_create_table('dgu_organogram', $schema['dgu_organogram']);
+}
+function dgu_organogram_update_1002() {
   $schema = module_invoke('dgu_organogram', 'schema');
   db_create_table('dgu_organogram', $schema['dgu_organogram']);
 }
