@@ -39,6 +39,22 @@ function dgu_app_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['last'] = '';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Content: App thumbnail */
+  $handler->display->display_options['fields']['field_app_thumbnail']['id'] = 'field_app_thumbnail';
+  $handler->display->display_options['fields']['field_app_thumbnail']['table'] = 'field_data_field_app_thumbnail';
+  $handler->display->display_options['fields']['field_app_thumbnail']['field'] = 'field_app_thumbnail';
+  $handler->display->display_options['fields']['field_app_thumbnail']['label'] = '';
+  $handler->display->display_options['fields']['field_app_thumbnail']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_app_thumbnail']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_app_thumbnail']['settings'] = array(
+    'image_style' => 'apps_thumbnail',
+    'image_link' => 'content',
+    'field_replies' => '',
+    'field_replies_settings' => array(
+      'field_replies_reply_field_name' => '',
+      'field_replies_revision' => '',
+    ),
+  );
   /* Field: Content: Screen shots */
   $handler->display->display_options['fields']['field_screen_shots']['id'] = 'field_screen_shots';
   $handler->display->display_options['fields']['field_screen_shots']['table'] = 'field_data_field_screen_shots';
