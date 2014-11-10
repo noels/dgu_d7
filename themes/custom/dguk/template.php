@@ -133,7 +133,13 @@ function dguk_preprocess_field(&$variables) {
     $variables['classes_array'] = array_merge($variables['classes_array'], $variables['element']['classes_array']);
   }
 
-  if($variables['element']['#field_name'] == 'field_uses_dataset') {
+    //label_hidden
+    if ($variables['element']['#field_name'] == 'field_paragraph') {
+      $variables['classes_array'][] = 'boxed';
+      $variables['label_hidden'] = TRUE;
+    }
+
+    if($variables['element']['#field_name'] == 'field_uses_dataset') {
     // Render direct link to dataset in CKAN instead of dataset copy in Drupal.
     foreach ($variables['element']['#items'] as $index => $item){
       $title = $item['entity']->title;
