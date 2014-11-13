@@ -135,6 +135,9 @@ function dguk_preprocess_field(&$variables) {
 
     //label_hidden
     if ($variables['element']['#field_name'] == 'field_paragraph') {
+      foreach(element_children($variables['element']) as $paragraph){
+      //  hide($variables['element'][$paragraph]['links']);
+      }
       $variables['classes_array'][] = 'boxed';
       $variables['label_hidden'] = TRUE;
     }
