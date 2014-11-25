@@ -6,13 +6,68 @@
 
 include_once 'dgu_consultation.features.inc';
 
-function dgu_consultation_node_load($nodes, $types){
-  if (in_array('book', $types)){
-    foreach($nodes as $node){
-      if ($node->book['bid'] != $node->nid){
-        $node->parent_book = node_load($node->book['bid']);
-      }
+/**
+ *  Implements hook_theme_registry_alter().
+ */
+function dgu_consultation_theme_registry_alter(&$theme_registry) {
+  $theme_registry['book_navigation']['preprocess functions'] = array(
+    0 => 'dgu_consultation_preprocess_book_navigation'
+  );
+}
+
+function dgu_consultation_preprocess_book_navigation(&$variables){
+  $parent_book = node_load($variables['book_link']['bid']);
+  $variables['parent_book_title'] = $parent_book->title;
+  $book_link = $variables['book_link'];
+
+  // Provide extra variables for themers. Not needed by default.
+  $variables['book_id'] = $book_link['bid'];
+  $variables['book_title'] = check_plain($parent_book->title);
+  $variables['book_url'] = 'node/' . $book_link['bid'];
+  $variables['current_depth'] = $book_link['depth'];
+  $variables['tree'] = '';
+  $tree = menu_tree_all_data(book_menu_name($book_link['bid']));
+  //$top_item = array_shift($tree);
+  $index = array();
+
+  $variables['tree'] = _dgu_consultation_build_index($tree, $index, $book_link['mlid']);
+
+}
+
+function _dgu_consultation_get_link_nid($link){
+  $parts = explode('/', $link['link_path']);
+  return $parts[1];
+}
+
+function _dgu_consultation_build_index($tree, &$index, $current_mlid, $depth_limit = null, $section = ''){
+  foreach ($tree as $data) {
+
+    //Optionally limit the depth
+    if ($depth_limit && $data['link']['depth'] > $depth_limit) {
+      break;
+    }
+    $index[] = array(
+      'title' => $data['link']['link_title'],
+      'nid' => _dgu_consultation_get_link_nid($data['link']),
+      'section' => $section,
+      'selected' => $current_mlid == $data['link']['mlid'],
+    );
+    $toc[$data['link']['mlid']] = dgu_consultation_build_paragraph($data); //truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
+    if ($data['below']) {
+      $section = $section . '1';
+      _dgu_consultation_build_index($data['below'], $index, $current_mlid, $depth_limit, $section);
     }
   }
 }
 
+/**
+ *  Implements hook_drupal_goto_alter().
+ */
+function dgu_consultation_build_paragraph($item){
+  $paras = array();
+  $book_page = node_load($item['nid']);
+  $paras = array_filter( function($it){
+    return array($it['thing'], $it['other_thing']);
+  }, $book_page['paragraphs']);
+  return $paras;
+}
