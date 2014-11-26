@@ -30,7 +30,8 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   //$top_item = array_shift($tree);
   $index = array();
 
-  $variables['tree'] = _dgu_consultation_build_index($tree, $index, $book_link['mlid']);
+  _dgu_consultation_build_index($tree, $index, $book_link['mlid']);
+  $variables['tree'] = "<pre> " . print_r($index, true) . "</pre>";
 
 }
 
@@ -40,22 +41,27 @@ function _dgu_consultation_get_link_nid($link){
 }
 
 function _dgu_consultation_build_index($tree, &$index, $current_mlid, $depth_limit = null, $section = ''){
+  $subsection = 1;
+  if (!empty($section)){
+    $section .= '.';
+  }
   foreach ($tree as $data) {
 
     //Optionally limit the depth
     if ($depth_limit && $data['link']['depth'] > $depth_limit) {
       break;
     }
-    $index[] = array(
+    $index[$data['link']['mlid']] = array(
       'title' => $data['link']['link_title'],
       'nid' => _dgu_consultation_get_link_nid($data['link']),
-      'section' => $section,
+      'section' => $section . $subsection++,
       'selected' => $current_mlid == $data['link']['mlid'],
     );
-    $toc[$data['link']['mlid']] = dgu_consultation_build_paragraph($data); //truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
+    $paragraph = 1;
+    $index[$data['link']['mlid']]['paragraphs'] = dgu_consultation_build_paragraph($data['link'], $index[$data['link']['mlid']]['section'], $paragraph); //truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
     if ($data['below']) {
-      $section = $section . '1';
-      _dgu_consultation_build_index($data['below'], $index, $current_mlid, $depth_limit, $section);
+      $index[$data['link']['mlid']]['subsections'] = array();
+      _dgu_consultation_build_index($data['below'], $index[$data['link']['mlid']]['subsections'], $current_mlid, $depth_limit, $section);
     }
   }
 }
@@ -63,11 +69,19 @@ function _dgu_consultation_build_index($tree, &$index, $current_mlid, $depth_lim
 /**
  *  Implements hook_drupal_goto_alter().
  */
-function dgu_consultation_build_paragraph($item){
+function dgu_consultation_build_paragraph($link, $section, &$paragraph){
+  $book_page = node_load(_dgu_consultation_get_link_nid($link));
   $paras = array();
-  $book_page = node_load($item['nid']);
-  $paras = array_filter( function($it){
-    return array($it['thing'], $it['other_thing']);
-  }, $book_page['paragraphs']);
+  if (!empty($section)){
+    $section .= '.';
+  }
+  foreach ( $book_page->field_paragraph[LANGUAGE_NONE] as $para) {
+    $paras[] = array(
+      'section' => $section . $paragraph++,
+      'title' => truncate_utf8(strip_tags($para['safe_value']), 30, TRUE, TRUE),
+    );
+
+  }
+
   return $paras;
 }
