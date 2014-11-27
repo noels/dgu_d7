@@ -63,6 +63,7 @@ function _dgu_consultation_build_index($data, &$index, $current_mlid, &$outline,
   }
   $index[$link['mlid']] = array(
     'title' => truncate_utf8(strip_tags($link['link_title']), 30, TRUE, TRUE),
+    'href' => $link['link_path'],
     'nid' => _dgu_consultation_get_link_nid($link),
     'section' => implode('.', $outline),
     'selected' => $current_mlid  == $link['mlid'],
