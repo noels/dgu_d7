@@ -1,7 +1,7 @@
-<h4> <dt><?php print dgu_consultation_to_roman($consultation_index['section']); ?></dt><dd><?php print $consultation_index['title']; ?></dd></h4>
+<h4> <dt><?php print $consultation_index['section']; ?></dt><dd><?php print $consultation_index['title']; ?></dd></h4>
 <ul>
   <?php foreach ($consultation_index['paragraphs'] as $paragraph): ?>
-  <li><dt><?php print array_pop(explode('.',$paragraph['section'])); ?></dt><dd><?php print $paragraph['title'] ?></dd></li>
+  <li><dt><?php print $paragraph['section']; ?></dt><dd><?php print $paragraph['title'] ?></dd></li>
   <?php endforeach; ?>
 
   <?php if (!empty($consultation_index['subsections'])): ?>
