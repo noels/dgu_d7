@@ -1,4 +1,4 @@
-<h2> <dt><?php print $consultation_index['section']; ?></dt><dd><?php print $consultation_index['title']; ?></dd></h2>
+<h4> <dt><?php print $consultation_index['section']; ?></dt><dd><?php print $consultation_index['title']; ?></dd></h4>
 <ul>
   <?php foreach ($consultation_index['paragraphs'] as $paragraph): ?>
   <li><dt><?php print $paragraph['section'] ?></dt><dd><?php print $paragraph['title'] ?></dd></li>
