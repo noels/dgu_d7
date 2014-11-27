@@ -13,6 +13,7 @@ function dgu_consultation_theme($existing, $type, $theme, $path) {
   return array(
     'consultation_index' => array(
       'variables' => array('consultation_index' => NULL),
+      'path' => $path . '/templates/',
       'template' => 'consultation-index',
     ),
   );
@@ -44,7 +45,7 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $outline = array();
   $top_item = array_shift($tree);
   _dgu_consultation_build_index($top_item, $index, $book_link['mlid'], 9, $outline);
-  $variables['tree'] .= "<pre> " . print_r($index, true) . "</pre>";
+  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift($index)));
 
 }
 
