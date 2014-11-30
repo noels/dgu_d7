@@ -50,7 +50,6 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $variables['current_depth'] = $book_link['depth'];
   $variables['tree'] = '';
   $tree = menu_tree_all_data(book_menu_name($book_link['bid']));
-  //$top_item = array_shift($tree);
   $index = array();
   $outline = array();
   $top_item = array_shift($tree);
