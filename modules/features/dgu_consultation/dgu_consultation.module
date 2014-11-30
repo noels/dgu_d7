@@ -28,6 +28,16 @@ function dgu_consultation_theme_registry_alter(&$theme_registry) {
   );
 }
 
+function dgu_consultation_node_view($node, $view_mode) {
+  if ($view_mode == 'full') {
+    if (!empty($node->book['bid']) && empty($node->in_preview)) {
+
+    }
+  }
+}
+
+
+
 function dgu_consultation_preprocess_book_navigation(&$variables){
   $parent_book = node_load($variables['book_link']['bid']);
   $variables['parent_book_title'] = $parent_book->title;
