@@ -36,6 +36,19 @@ function dgu_consultation_node_view($node, $view_mode) {
   }
 }
 
+function _dgu_consultation_get_index($bid){
+  static $index;
+  if (!$index){
+    $tree = menu_tree_all_data(book_menu_name($bid));
+    $index = array();
+    $outline = array();
+    $top_item = array_shift($tree);
+    _dgu_consultation_build_index($top_item, $index, $book_link['mlid'], $outline);
+  }
+  return $index;
+
+}
+
 
 
 function dgu_consultation_preprocess_book_navigation(&$variables){
@@ -48,14 +61,7 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $variables['book_title'] = check_plain($parent_book->title);
   $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
-  $variables['tree'] = '';
-  $tree = menu_tree_all_data(book_menu_name($book_link['bid']));
-  $index = array();
-  $outline = array();
-  $top_item = array_shift($tree);
-  _dgu_consultation_build_index($top_item, $index, $book_link['mlid'], $outline);
-  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift($index)));
-
+  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift(_dgu_consultation_get_index($book_link['bid']))));
 }
 
 function _dgu_consultation_get_link_nid($link){
