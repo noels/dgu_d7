@@ -55,20 +55,34 @@ function _dgu_consultation_get_index($bid = 0, $current_mlid = 0){
  */
 function dgu_consultation_preprocess_node(&$variables) {
   if (!empty($variables['node']->book['bid'])) {
-    $current_page = _dgu_consultation_get_current_index_page();
-    $variables['title'] = "<dt>" . $section . "</dt><dd>" . $variables['title'] . "</dd>";
+    $index = _dgu_consultation_get_index();
+    $current_page = _dgu_consultation_get_current_index_page($index);
+    $section  = $current_page['section'];
+    $title = $variables['title'];
+    $variables['node']->title = "$section $title";
+    foreach ($variables['content']['field_paragraph']['#items'] as $index => $para){
+      $variables['content']['field_paragraph'][$index]['field']['#markup'] =
+        '<span>' . $current_page['paragraphs'][$index]['section'] . '</span>'
+        . $variables['content']['field_paragraph'][$index]['field']['#markup'];
+    }
+
+    //$variables['node']->book
   }
 
 }
 
 function _dgu_consultation_get_current_index_page($index){
-  $index = _dgu_consultation_get_index();
-
-
-  if ($index['selected']) {
-    return $index;
+  $page = FALSE;
+  foreach ($index as $page) {
+    if ($page['selected']) {
+      return $page;
+    }
+    $page  = _dgu_consultation_get_current_index_page($page['subsections']);
+    if (!empty($page)){
+      return $page;
+    }
   }
-
+  return $page;
 }
 
 function dgu_consultation_preprocess_book_navigation(&$variables){
