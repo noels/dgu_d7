@@ -31,25 +31,45 @@ function dgu_consultation_theme_registry_alter(&$theme_registry) {
 function dgu_consultation_node_view($node, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
+      $node->book['book_index'] = _dgu_consultation_get_index($node->book['bid'], $node->book['mlid']);
 
     }
   }
 }
 
-function _dgu_consultation_get_index($bid){
+function _dgu_consultation_get_index($bid = 0, $current_mlid = 0){
   static $index;
   if (!$index){
     $tree = menu_tree_all_data(book_menu_name($bid));
     $index = array();
     $outline = array();
     $top_item = array_shift($tree);
-    _dgu_consultation_build_index($top_item, $index, $book_link['mlid'], $outline);
+    _dgu_consultation_build_index($top_item, $index, $current_mlid, $outline);
   }
   return $index;
 
 }
 
+/**
+ *  Implements hook_preprocess_HOOK().
+ */
+function dgu_consultation_preprocess_node(&$variables) {
+  if (!empty($variables['node']->book['bid'])) {
+    $current_page = _dgu_consultation_get_current_index_page();
+    $variables['title'] = "<dt>" . $section . "</dt><dd>" . $variables['title'] . "</dd>";
+  }
 
+}
+
+function _dgu_consultation_get_current_index_page($index){
+  $index = _dgu_consultation_get_index();
+
+
+  if ($index['selected']) {
+    return $index;
+  }
+
+}
 
 function dgu_consultation_preprocess_book_navigation(&$variables){
   $parent_book = node_load($variables['book_link']['bid']);
@@ -61,7 +81,7 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $variables['book_title'] = check_plain($parent_book->title);
   $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
-  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift(_dgu_consultation_get_index($book_link['bid']))));
+  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift(_dgu_consultation_get_index($book_link['bid'],$book_link['mlid']))));
 }
 
 function _dgu_consultation_get_link_nid($link){
