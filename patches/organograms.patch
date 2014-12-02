@@ -71,17 +71,18 @@ index 26a56be..867f453 100644
 +  db_create_table('ckan_organogram', $schema['ckan_organogram']);
 +}
 diff --git a/ckan_publisher/ckan_publisher.module b/ckan_publisher/ckan_publisher.module
-index 3c408b1..0a2c9ae 100644
+index 9f2cb43..6d2a7c1 100644
 --- a/ckan_publisher/ckan_publisher.module
 +++ b/ckan_publisher/ckan_publisher.module
-@@ -17,10 +17,20 @@ function ckan_publisher_entity_info() {
+@@ -17,11 +17,21 @@ function ckan_publisher_entity_info() {
      'entity class' => 'CKANPublisher',
      'controller class' => 'CKANPublisherController',
      'base table' => 'ckan_publisher',
 -    'fieldable' => FALSE,
 +    'fieldable' => TRUE,
      'entity keys' => array(
-         'id' => 'id',
+       'id' => 'id',
+       'label' => 'title',
      ),
 +    'bundles' => array(
 +      'ckan_publisher' => array( // This is the bundle_key.
@@ -96,7 +97,7 @@ index 3c408b1..0a2c9ae 100644
      'label callback' => 'entity_class_label',
      'uri callback' => 'entity_class_uri',
      'creation callback' => 'ckan_publisher_create',
-@@ -117,6 +127,42 @@ function ckan_publisher_load($id, $reset = FALSE) {
+@@ -118,6 +128,42 @@ function ckan_publisher_load($id, $reset = FALSE) {
    return reset($ckan_publishers);
  }
  
