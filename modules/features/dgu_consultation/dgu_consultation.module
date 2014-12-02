@@ -139,12 +139,14 @@ function _dgu_consultation_build_index($data, &$index, $current_mlid, &$outline,
 function dgu_consultation_build_paragraph($link, &$outline){
   $book_page = node_load(_dgu_consultation_get_link_nid($link));
   $paras = array();
-  foreach ( $book_page->field_paragraph[LANGUAGE_NONE] as $para) {
-    $paras[] = array(
-      'section' => implode('.', $outline),
-      'title' => truncate_utf8(strip_tags($para['safe_value']), 30, TRUE, TRUE),
-    );
-    $outline[count($outline)-1]++;
+  if (!empty($book_page->field_paragraph[LANGUAGE_NONE])){
+    foreach ( $book_page->field_paragraph[LANGUAGE_NONE] as $para) {
+      $paras[] = array(
+        'section' => implode('.', $outline),
+        'title' => truncate_utf8(strip_tags($para['safe_value']), 30, TRUE, TRUE),
+      );
+      $outline[count($outline)-1]++;
+    }
   }
   return $paras;
 }
