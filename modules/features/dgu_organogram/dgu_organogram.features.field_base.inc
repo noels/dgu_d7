@@ -12,9 +12,9 @@ function dgu_organogram_field_default_field_bases() {
 
   // Exported field_base: 'field_endpoint'
   $field_bases['field_endpoint'] = array(
-    'active' => '1',
-    'cardinality' => '1',
-    'deleted' => '0',
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_endpoint',
     'foreign keys' => array(
@@ -30,20 +30,54 @@ function dgu_organogram_field_default_field_bases() {
         0 => 'format',
       ),
     ),
-    'locked' => '0',
+    'locked' => 0,
     'module' => 'text',
     'settings' => array(
       'max_length' => 255,
     ),
-    'translatable' => '0',
+    'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_organogram'
+  $field_bases['field_organogram'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_organogram',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'foreign keys' => array(
+      'fid' => array(
+        'columns' => array(
+          'fid' => 'fid',
+        ),
+        'table' => 'file_managed',
+      ),
+    ),
+    'indexes' => array(
+      'fid' => array(
+        0 => 'fid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'file',
+    'settings' => array(
+      'display_default' => 0,
+      'display_field' => 0,
+      'uri_scheme' => 'public',
+    ),
+    'translatable' => 0,
+    'type' => 'file',
   );
 
   // Exported field_base: 'field_parent_organogram'
   $field_bases['field_parent_organogram'] = array(
-    'active' => '1',
-    'cardinality' => '1',
-    'deleted' => '0',
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_parent_organogram',
     'foreign keys' => array(
@@ -59,7 +93,7 @@ function dgu_organogram_field_default_field_bases() {
         0 => 'target_id',
       ),
     ),
-    'locked' => '0',
+    'locked' => 0,
     'module' => 'entityreference',
     'settings' => array(
       'handler' => 'base',
@@ -80,7 +114,7 @@ function dgu_organogram_field_default_field_bases() {
       ),
       'target_type' => 'node',
     ),
-    'translatable' => '0',
+    'translatable' => 0,
     'type' => 'entityreference',
   );
 
