@@ -103,6 +103,9 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
   $variables['classes_array'][] = 'boxed';
+  $variables['attributes_array'] = array();
+  $variables['title_attributes_array'] = array();
+  $variables['content_attributes_array'] = array();
   $index = _dgu_consultation_get_index($book_link['bid'],$book_link['mlid']);
   $variables['tree'] = drupal_render($index);
 }
