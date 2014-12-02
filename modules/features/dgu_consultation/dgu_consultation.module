@@ -45,6 +45,9 @@ function _dgu_consultation_get_index($bid = 0, $current_mlid = 0){
     $outline = array();
     $top_item = array_shift($tree);
     _dgu_consultation_build_index($top_item, $index, $current_mlid, $outline);
+    $index['#consultation_index'] = array_shift($index);
+    $index['#theme'] =  'consultation_index';
+    $index['#attributes'] = array('class' => array());
   }
   return $index;
 
@@ -99,8 +102,9 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $variables['book_title'] = check_plain($parent_book->title);
   $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
+  $variables['classes_array'][] = 'boxed';
   $index = _dgu_consultation_get_index($book_link['bid'],$book_link['mlid']);
-  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift($index)));
+  $variables['tree'] = drupal_render($index);
 }
 
 function _dgu_consultation_get_link_nid($link){
