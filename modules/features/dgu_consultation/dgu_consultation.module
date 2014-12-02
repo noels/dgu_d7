@@ -58,8 +58,8 @@ function _dgu_consultation_get_index($bid = 0, $current_mlid = 0){
  */
 function dgu_consultation_preprocess_node(&$variables) {
   if (!empty($variables['node']->book['bid'])) {
-    $index = _dgu_consultation_get_index();
-    $current_page = _dgu_consultation_get_current_index_page($index);
+    $index = _dgu_consultation_get_index($variables['node']->book['bid'], $variables['node']->book['mlid']);
+    $current_page = _dgu_consultation_get_current_index_page(array($index['#consultation_index']));
     $section  = $current_page['section'];
     $title = $variables['title'];
     $variables['node']->title = "$section $title";
