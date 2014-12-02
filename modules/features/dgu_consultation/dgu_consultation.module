@@ -99,7 +99,8 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $variables['book_title'] = check_plain($parent_book->title);
   $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
-  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift(_dgu_consultation_get_index($book_link['bid'],$book_link['mlid']))));
+  $index = _dgu_consultation_get_index($book_link['bid'],$book_link['mlid']);
+  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift($index)));
 }
 
 function _dgu_consultation_get_link_nid($link){
