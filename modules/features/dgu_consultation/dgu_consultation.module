@@ -64,6 +64,10 @@ function dgu_consultation_preprocess_node(&$variables) {
       $variables['content']['field_paragraph'][$index]['field']['#markup'] =
         '<span>' . $current_page['paragraphs'][$index]['section'] . '</span>'
         . $variables['content']['field_paragraph'][$index]['field']['#markup'];
+      if (!empty($variables['content']['field_paragraph'][$index]['replies'])){
+        hide($variables['content']['field_paragraph'][$index]['links']);
+
+      }
     }
 
     //$variables['node']->book

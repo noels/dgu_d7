@@ -27,16 +27,6 @@
 
     <?php
     // Hide comments, tags, and links now so that we can render them later.
-    hide($content['book_navigation']);
-    hide($content['links']);
-    hide($content['field_comment']);
-    print render($content['field_paragraph']);
     print render($content);
     ?>
 </article> <!-- /.node -->
-<?php if (!empty($content['links']) || !empty($content['field_comment'])): ?>
-  <footer>
-    <?php print render($content['field_comment']); ?>
-    <?php print render($content['links']); ?>
-  </footer>
-<?php endif; ?>
