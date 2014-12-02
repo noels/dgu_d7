@@ -45,6 +45,9 @@ function _dgu_consultation_get_index($bid = 0, $current_mlid = 0){
     $outline = array();
     $top_item = array_shift($tree);
     _dgu_consultation_build_index($top_item, $index, $current_mlid, $outline);
+    $index['#consultation_index'] = array_shift($index);
+    $index['#theme'] =  'consultation_index';
+    $index['#attributes'] = array('class' => array());
   }
   return $index;
 
@@ -55,18 +58,20 @@ function _dgu_consultation_get_index($bid = 0, $current_mlid = 0){
  */
 function dgu_consultation_preprocess_node(&$variables) {
   if (!empty($variables['node']->book['bid'])) {
-    $index = _dgu_consultation_get_index();
-    $current_page = _dgu_consultation_get_current_index_page($index);
+    $index = _dgu_consultation_get_index($variables['node']->book['bid'], $variables['node']->book['mlid']);
+    $current_page = _dgu_consultation_get_current_index_page(array($index['#consultation_index']));
     $section  = $current_page['section'];
     $title = $variables['title'];
     $variables['node']->title = "$section $title";
-    foreach ($variables['content']['field_paragraph']['#items'] as $index => $para){
-      $variables['content']['field_paragraph'][$index]['field']['#markup'] =
-        '<span>' . $current_page['paragraphs'][$index]['section'] . '</span>'
-        . $variables['content']['field_paragraph'][$index]['field']['#markup'];
-      if (!empty($variables['content']['field_paragraph'][$index]['replies'])){
-        hide($variables['content']['field_paragraph'][$index]['links']);
+    if (!empty($variables['content']['field_paragraph'])) {
+      foreach ($variables['content']['field_paragraph']['#items'] as $index => $para){
+        $variables['content']['field_paragraph'][$index]['field']['#markup'] =
+          '<span>' . $current_page['paragraphs'][$index]['section'] . '</span>'
+          . $variables['content']['field_paragraph'][$index]['field']['#markup'];
+        if (!empty($variables['content']['field_paragraph'][$index]['replies'])){
+          hide($variables['content']['field_paragraph'][$index]['links']);
 
+        }
       }
     }
 
@@ -99,7 +104,12 @@ function dgu_consultation_preprocess_book_navigation(&$variables){
   $variables['book_title'] = check_plain($parent_book->title);
   $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
-  $variables['tree'] = theme('consultation_index', array('consultation_index' => array_shift(_dgu_consultation_get_index($book_link['bid'],$book_link['mlid']))));
+  $variables['classes_array'][] = 'boxed';
+  $variables['attributes_array'] = array();
+  $variables['title_attributes_array'] = array();
+  $variables['content_attributes_array'] = array();
+  $index = _dgu_consultation_get_index($book_link['bid'],$book_link['mlid']);
+  $variables['tree'] = drupal_render($index);
 }
 
 function _dgu_consultation_get_link_nid($link){
@@ -139,12 +149,14 @@ function _dgu_consultation_build_index($data, &$index, $current_mlid, &$outline,
 function dgu_consultation_build_paragraph($link, &$outline){
   $book_page = node_load(_dgu_consultation_get_link_nid($link));
   $paras = array();
-  foreach ( $book_page->field_paragraph[LANGUAGE_NONE] as $para) {
-    $paras[] = array(
-      'section' => implode('.', $outline),
-      'title' => truncate_utf8(strip_tags($para['safe_value']), 30, TRUE, TRUE),
-    );
-    $outline[count($outline)-1]++;
+  if (!empty($book_page->field_paragraph[LANGUAGE_NONE])){
+    foreach ( $book_page->field_paragraph[LANGUAGE_NONE] as $para) {
+      $paras[] = array(
+        'section' => implode('.', $outline),
+        'title' => truncate_utf8(strip_tags($para['safe_value']), 30, TRUE, TRUE),
+      );
+      $outline[count($outline)-1]++;
+    }
   }
   return $paras;
 }

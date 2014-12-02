@@ -57,7 +57,7 @@ function dguk_preprocess_node(&$variables) {
   $variables['updated'] = $variables['created'] != $variables['changed'] ? '| Updated on ' . format_date($variables['changed']) : FALSE;
 
   // We render user picture only on forum and blog nodes.
-  if ($variables['node']->type == 'forum' || $variables['node']->type == 'blog') {
+  if ($variables['node']->type == 'forum' || $variables['node']->type == 'blog' || $variables['node']->type == 'book') {
     $fields = field_info_instances('user', 'user');
     $field_id = $fields['field_avatar']['field_id'];
     $user = new stdClass();
