@@ -1,12 +1,6 @@
 <?php
 /**
  * @file
- * Code for the DGU Organogram feature.
- */
-
-include_once 'dgu_organogram.features.inc';
-/**
- * @file
  * DGU Organogram feature. Provides functionality to load preview and publish organograms for CKAN publishers. Uses
  * CKAN_PHP api to connect to the CKAN instance and publishes data to the triple store using the service developed by
  * Epimorphics.  Requires the correct setting for epimorphics_uri in a variable and uses the site wide CKAN api key and uri.
@@ -486,9 +480,7 @@ function dgu_organogram_after($element, $form_state){
       '#value' => $publish_date,
     );
     //finally remove the form-control class put on by the bootstrap module which is unaware of managed_files
-    if (!empty($element['#attributes']['class'])){
-      $element['#attributes']['class'] = array_filter($element['#attributes']['class'], '_dgu_organogram_remove_form_control');
-    }
+    $element['#attributes']['class'] = array_filter($element['#attributes']['class'], '_dgu_organogram_remove_form_control');
   } else {
     $dates = _dgu_organogram_get_next_dates();
 
@@ -776,7 +768,7 @@ function _dgu_organogram_get_organogram_package_for_publisher($publisher_name){
 function _dgu_organogram_get_ckan_api_client() {
   static $client = null;
   if (!$client){
-    require_once DRUPAL_ROOT . '/sites/all/vendor/autoload.php';
+    require_once 'sites/all/vendor/autoload.php';
     $client = Silex\ckan\CkanClient::factory(
       array(
         'baseUrl' => variable_get('ckan_url', ''),
