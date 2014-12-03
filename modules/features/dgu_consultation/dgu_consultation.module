@@ -53,6 +53,15 @@ function _dgu_consultation_get_index($bid = 0, $current_mlid = 0){
 
 }
 
+function dgu_consultation_preprocess(&$variables, $hook){
+  if ($hook == 'replies'){
+    $parent_entity = $variables['entity'];
+    if ($parent_entity->type == 'book'){
+      unset($variables['links']['add_reply']);
+    }
+  }
+}
+
 /**
  *  Implements hook_preprocess_HOOK().
  */
@@ -69,7 +78,7 @@ function dgu_consultation_preprocess_node(&$variables) {
           '<span>' . $current_page['paragraphs'][$index]['section'] . '</span>'
           . $variables['content']['field_paragraph'][$index]['field']['#markup'];
         if (!empty($variables['content']['field_paragraph'][$index]['replies'])){
-          hide($variables['content']['field_paragraph'][$index]['links']);
+          $variables['content']['field_paragraph'][$index]['links']['#weight'] = '2';
 
         }
       }
