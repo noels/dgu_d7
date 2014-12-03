@@ -480,7 +480,9 @@ function dgu_organogram_after($element, $form_state){
       '#value' => $publish_date,
     );
     //finally remove the form-control class put on by the bootstrap module which is unaware of managed_files
-    $element['#attributes']['class'] = array_filter($element['#attributes']['class'], '_dgu_organogram_remove_form_control');
+    if (!empty($element['#attributes']['class'])){
+      $element['#attributes']['class'] = array_filter($element['#attributes']['class'], '_dgu_organogram_remove_form_control');
+    }
   } else {
     $dates = _dgu_organogram_get_next_dates();
 
