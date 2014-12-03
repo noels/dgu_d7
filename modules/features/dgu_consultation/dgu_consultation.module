@@ -16,6 +16,13 @@ function dgu_consultation_theme($existing, $type, $theme, $path) {
       'path' => $path . '/templates/',
       'template' => 'consultation-index',
     ),
+    'consultation_paragraph' => array(
+      'base hook' => 'field',
+      'render element' => 'element',
+      'path' => $path . '/templates/',
+      'template' => 'consultation-paragraph',
+
+    ),
   );
 }
 
@@ -74,11 +81,15 @@ function dgu_consultation_preprocess_node(&$variables) {
     $variables['node']->title = "$section $title";
     if (!empty($variables['content']['field_paragraph'])) {
       foreach ($variables['content']['field_paragraph']['#items'] as $index => $para){
+        $variables['content']['field_paragraph']['#theme'] = 'consultation_paragraph';
         $variables['content']['field_paragraph'][$index]['field']['#markup'] =
           '<span>' . $current_page['paragraphs'][$index]['section'] . '</span>'
           . $variables['content']['field_paragraph'][$index]['field']['#markup'];
         if (!empty($variables['content']['field_paragraph'][$index]['replies'])){
           $variables['content']['field_paragraph'][$index]['links']['#weight'] = '2';
+          $variables['content']['field_paragraph'][$index]['links']['reply']['#links']['replies-links']['attributes']['class'][] = 'btn-default';
+          $variables['content']['field_paragraph'][$index]['links']['reply']['#links']['replies-links']['attributes']['class'][] = 'btn';
+          $variables['content']['field_paragraph'][$index]['links']['reply']['#links']['replies-links']['attributes']['class'][] = 'btn-primary';
 
         }
       }
