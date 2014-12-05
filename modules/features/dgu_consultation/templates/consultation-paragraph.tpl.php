@@ -8,9 +8,9 @@
         <div class="consultation-paragraph">
           <span class="subsection"><a id="<?php print $item['section']; ?>" ><?php print $item['section']; ?></a></span>
           <div class="consultation-paragraph-inner"><?php print render($item['field']); ?></div>
+        </div>
           <?php print render($item['replies']) ?>
           <?php print render($item['links']) ?>
-        </div>
       </div>
     <?php endforeach; ?>
   </div>
