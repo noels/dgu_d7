@@ -65,6 +65,7 @@ function dgu_consultation_preprocess(&$variables, $hook){
     $parent_entity = $variables['entity'];
     if ($parent_entity->type == 'book'){
       unset($variables['links']['add_reply']);
+      unset($variables['links']['reply_post_forbidden']);
     }
   }
 }
