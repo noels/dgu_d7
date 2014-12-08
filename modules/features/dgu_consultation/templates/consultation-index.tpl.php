@@ -1,7 +1,7 @@
-<h4><a href="<?php print($consultation_index['href']); ?>"><?php print $consultation_index['section']; ?> <?php print $consultation_index['title']; ?></a></h4>
+<h4><a href="<?php print($consultation_index['href']); ?>"><?php print $consultation_index['section']; ?> - <?php print $consultation_index['title']; ?></a></h4>
 <ul>
   <?php foreach ($consultation_index['paragraphs'] as $paragraph): ?>
-  <li class="subsection"><a href="<?php print($consultation_index['href']); ?>#<?php print $paragraph['section']; ?>"><?php print $paragraph['section']; ?> <?php print $paragraph['title'] ?></a></li>
+  <li class="subsection"><a href="<?php print($consultation_index['href']); ?>#<?php print $paragraph['section']; ?>"><?php print $paragraph['section']; ?> - <?php print $paragraph['title'] ?></a></li>
   <?php endforeach; ?>
 
   <?php if (!empty($consultation_index['subsections'])): ?>
