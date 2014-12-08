@@ -7,13 +7,10 @@
         <h1 class="node-title" <?php print $title_attributes; ?>><?php print $title; ?></h1>
     <?php endif; ?>
 
-    <header class="with-avatar">
-
-        <?php print $avatar; ?>
-
+    <header>
         <span class="submitted">
-        <?php print $submitted; ?>
-      </span>
+          <?php print $submitted; ?>
+        </span>
         <?php if ($updated): ?>
             <span class="submitted">
           <?php print $updated; ?>
