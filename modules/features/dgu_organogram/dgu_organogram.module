@@ -377,9 +377,9 @@ function theme_organogram_file_widget($variables) {
 }
 
 function _sort_organogram_date($a, $b) {
-  $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
-  $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
-  return $a_weight - $b_weight;
+  $a_weight = (is_array($a) && isset($a['#file']->timestamp) ? $a['#file']->timestamp : 0);
+  $b_weight = (is_array($b) && isset($b['#file']->timestamp) ? $b['#file']->timestamp : 0);
+  return $b_weight - $a_weight;
 }
 
 /**
