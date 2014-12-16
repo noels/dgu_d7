@@ -302,7 +302,7 @@ function theme_organogram_file_widget($variables) {
   foreach (element_children($element) as $key) {
     $widgets[] = &$element[$key];
   }
-  usort($widgets, '_field_sort_items_value_helper');
+  usort($widgets, '_sort_organogram_date');
 
   $rows = array();
   foreach ($widgets as $key => &$widget) {
@@ -374,6 +374,12 @@ function theme_organogram_file_widget($variables) {
   $output = drupal_render_children($element);
   $output .= empty($rows) ? '' : theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => $table_id)));
   return $output;
+}
+
+function _sort_organogram_date($a, $b) {
+  $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
+  $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
+  return $a_weight - $b_weight;
 }
 
 /**
