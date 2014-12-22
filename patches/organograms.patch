@@ -1,20 +1,19 @@
-diff --git a/ckan_publisher/ckan_publisher.admin.inc b/ckan_publisher/ckan_publisher.admin.inc
-index 1ffb7b1..91e8715 100644
---- a/ckan_publisher/ckan_publisher.admin.inc
-+++ b/ckan_publisher/ckan_publisher.admin.inc
-@@ -15,7 +15,7 @@ class CKANPublisherUIController extends EntityDefaultUIController {
+diff -ur ckan/ckan_publisher/ckan_publisher.admin.inc ckan_hmm/ckan_publisher/ckan_publisher.admin.inc
+--- ckan/ckan_publisher/ckan_publisher.admin.inc        2014-12-17 17:22:34.000000000 +0000
++++ ckan_hmm/ckan_publisher/ckan_publisher.admin.inc    2014-12-17 16:35:13.000000000 +0000
+@@ -15,7 +15,7 @@
     * parent class hook_menu() is optimized for entity type administration.
     */
    public function hook_menu() {
 -    $items = array();
 +    $items = parent::hook_menu();
      $wildcard = isset($this->entityInfo['admin ui']['menu wildcard']) ? $this->entityInfo['admin ui']['menu wildcard'] : '%' . $this->entityType;
- 
+
      // Menu item for viewing CKAN Publishers
-@@ -30,6 +30,15 @@ class CKANPublisherUIController extends EntityDefaultUIController {
+@@ -30,6 +30,15 @@
        'type' => MENU_CALLBACK,
      );
- 
+
 +    // Menu item for viewing CKAN Publishers
 +    $items['ckan_publisher/' . $wildcard . '/edit'] = array(
 +      'page callback' => 'drupal_get_form',
@@ -27,62 +26,30 @@ index 1ffb7b1..91e8715 100644
      $items['admin/structure/ckan_publisher'] = array(
        'title' => 'Publishers',
        'access arguments' => array('Administer CKAN'),
-diff --git a/ckan_publisher/ckan_publisher.install b/ckan_publisher/ckan_publisher.install
-index 26a56be..867f453 100644
---- a/ckan_publisher/ckan_publisher.install
-+++ b/ckan_publisher/ckan_publisher.install
-@@ -80,6 +80,36 @@ function ckan_publisher_schema() {
-       'ckan_id' => array('ckan_id'),
-     ),
+diff -ur ckan/ckan_publisher/ckan_publisher.install ckan_hmm/ckan_publisher/ckan_publisher.install
+--- ckan/ckan_publisher/ckan_publisher.install  2014-12-17 17:22:34.000000000 +0000
++++ ckan_hmm/ckan_publisher/ckan_publisher.install      2014-12-17 16:35:13.000000000 +0000
+@@ -82,4 +82,4 @@
    );
-+  $schema['ckan_organogram'] = array(
-+    'description' => 'The CKAN Publisher organogram dates.',
-+    'fields' => array(
-+      'id' => array(
-+        'description' => 'Drupal id for a CKAN Publisher to which this organogram relates.',
-+        'type' => 'int',
-+        'unsigned' => TRUE,
-+        'not null' => TRUE,
-+      ),
-+      'fid' => array(
-+        'description' => 'CKAN GUID',
-+        'type' => 'int',
-+        'length' => 36,
-+        'unsigned' => TRUE,
-+        'not null' => TRUE,
-+      ),
-+      'deadline_date' => array(
-+        'description' => 'The Unix timestamp of the Publish date for this organogram.',
-+        'type' => 'int',
-+        'not null' => TRUE,
-+        'default' => 0,
-+      ),
-+    ),
-+  );
- 
+
    return $schema;
 -}
 \ No newline at end of file
 +}
-+
-+
-+function ckan_publisher_update_1001() {
-+  $schema = module_invoke('ckan_publisher', 'schema');
-+  db_create_table('ckan_organogram', $schema['ckan_organogram']);
-+}
-diff --git a/ckan_publisher/ckan_publisher.module b/ckan_publisher/ckan_publisher.module
-index 3c408b1..0a2c9ae 100644
---- a/ckan_publisher/ckan_publisher.module
-+++ b/ckan_publisher/ckan_publisher.module
-@@ -17,10 +17,20 @@ function ckan_publisher_entity_info() {
+diff -ur ckan/ckan_publisher/ckan_publisher.module ckan_hmm/ckan_publisher/ckan_publisher.module
+--- ckan/ckan_publisher/ckan_publisher.module   2014-12-17 17:22:34.000000000 +0000
++++ ckan_hmm/ckan_publisher/ckan_publisher.module       2014-12-17 16:35:13.000000000 +0000
+@@ -17,10 +17,19 @@
      'entity class' => 'CKANPublisher',
      'controller class' => 'CKANPublisherController',
      'base table' => 'ckan_publisher',
 -    'fieldable' => FALSE,
 +    'fieldable' => TRUE,
      'entity keys' => array(
-         'id' => 'id',
-     ),
+-      'id' => 'id',
+-      'label' => 'title',
++        'id' => 'id',
++    ),
 +    'bundles' => array(
 +      'ckan_publisher' => array( // This is the bundle_key.
 +        'label' => 'CKAN Publisher',
@@ -92,14 +59,13 @@ index 3c408b1..0a2c9ae 100644
 +          'access arguments' => array('Administer CKAN'),
 +        ),
 +      ),
-+    ),
+     ),
      'label callback' => 'entity_class_label',
      'uri callback' => 'entity_class_uri',
-     'creation callback' => 'ckan_publisher_create',
-@@ -117,6 +127,42 @@ function ckan_publisher_load($id, $reset = FALSE) {
+@@ -118,6 +127,42 @@
    return reset($ckan_publishers);
  }
- 
+
 +function ckan_publisher_form($form, &$form_state, $ckan_publisher) {
 +
 +  $form['id'] = array(
@@ -136,6 +102,6 @@ index 3c408b1..0a2c9ae 100644
 +  );
 +  return $form;
 +}
- 
+
  /**
   * Load multiple CKAN Publishers based on certain conditions.
