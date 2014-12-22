@@ -6,7 +6,7 @@
   organisation, known as organograms.</p>
 <div class="organogram-help">
   <div>
-    <a href=""http://data.gov.uk/sites/default/files/Organogram%20Visualisation%20Tool%20v1.0_10.pdf" >
+    <a href="http://data.gov.uk/library/data-portal-guidance-organogram-guidance" >
     <i class="icon-3x icon-file-text"></i>
           <span class="format-name">
               PDF
