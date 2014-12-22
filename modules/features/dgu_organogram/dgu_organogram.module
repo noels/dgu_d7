@@ -631,10 +631,15 @@ function dgu_organogram_organogram_publish($form, &$form_state){
   $package = _dgu_organogram_get_organogram_package_for_publisher($group['name']);
   if (!$package) {
       $packageJson = _dgu_organogram_package_json($group);
-      $response = $client->PackageCreate(array('data'=>$packageJson));
-      $createPackageResponse = $response->toArray();
-      $package = $createPackageResponse['result'];
-      drupal_set_message("Package id: {$package['id']} created.");
+      try {
+        $response = $client->PackageCreate(array('data'=>$packageJson));
+        $createPackageResponse = $response->toArray();
+        $package = $createPackageResponse['result'];
+        drupal_set_message("Package id: {$package['id']} created.");
+      } catch (Exception $e){
+        drupal_set_message("There was an exception while trying to create the dataset package on CKAN. " . $e->getMessage(), 'error');
+        return;
+      }
   } else {
     drupal_set_message("Package id: {$package['id']} updated.");
   }
