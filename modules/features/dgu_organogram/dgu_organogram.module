@@ -771,10 +771,10 @@ function _dgu_organogram_get_ckan_group($group_id) {
 
 function _dgu_organogram_get_organogram_package_for_publisher($publisher_name){
   $client = _dgu_organogram_get_ckan_api_client();
-  $response = $client->PackageSearch(array('fq' => "publisher: $publisher_name import_source:organograms_v2"));
+  $response = $client->getDataset(array('id' => 'organogram-' . str_replace(' ', '-', $publisher_name)));
   $searchResult = $response->toArray();
 
-  return (is_array($searchResult['result']['results']) && count($searchResult['result']['results']) > 0) ? $searchResult['result']['results'][0] : null;
+  return (is_array($searchResult['result'])) ? $searchResult['result'] : null;
 }
 
 
