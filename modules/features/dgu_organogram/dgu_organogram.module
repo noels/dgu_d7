@@ -647,38 +647,44 @@ function dgu_organogram_organogram_publish($form, &$form_state){
   //Ensure that we have a valid file fid before carrying on.
   $fid = $form_state['triggering_element']['#attributes']['data-file-fid'];
   if ($fid){
-    $file = file_load($fid);
-    list($junior_csv, $senior_csv) = _dgu_organogram_get_csv_filenames( _dgu_organogram_read_index(_dgu_organogram_generate_csv_files($fid)));
-    $dates = _dgu_organogram_get_next_dates();
-    $organogram_date = reset($dates);
-    if (!empty($form_state['organogram_dates'][$file->fid])){
-      $organogram_date = date( 'd-m-Y', $form_state['organogram_dates'][$file->fid]);
-    }
-    $organogram_path = '/organogram/' . $group['name']  . '/' . $organogram_date . '/';
-    $organogram_file_location = DRUPAL_ROOT . '/' . variable_get('file_public_path') . $organogram_path;
-    if (!file_exists($organogram_file_location)) {
-      mkdir($organogram_file_location, 0777, true);
-    }
-    $tmp = file_directory_temp();
-    $tmp = $tmp . (substr($tmp, -1) == '/' ? '' : '/');
-    $src =  $tmp . $junior_csv;
-    $dst =  $organogram_file_location .   $junior_csv;
-    if (!copy ( $src, $dst)){
-      $err = error_get_last();
-      throw new Exception("Unable to copy { $src } to {$dst} \n $err");
-    }
+    try {
+      $file = file_load($fid);
+      list($junior_csv, $senior_csv) = _dgu_organogram_get_csv_filenames( _dgu_organogram_read_index(_dgu_organogram_generate_csv_files($fid)));
+      $dates = _dgu_organogram_get_next_dates();
+      $organogram_date = reset($dates);
+      if (!empty($form_state['organogram_dates'][$file->fid])){
+        $organogram_date = date( 'd-m-Y', $form_state['organogram_dates'][$file->fid]);
+      }
+      $organogram_path = '/organogram/' . $group['name']  . '/' . $organogram_date . '/';
+      $organogram_file_location = DRUPAL_ROOT . '/' . variable_get('file_public_path') . $organogram_path;
+      if (!file_exists($organogram_file_location)) {
+        mkdir($organogram_file_location, 0777, true);
+      }
+      $tmp = file_directory_temp();
+      $tmp = $tmp . (substr($tmp, -1) == '/' ? '' : '/');
+      $src =  $tmp . $junior_csv;
+      $dst =  $organogram_file_location .   $junior_csv;
+      if (!copy ( $src, $dst)){
+        $err = error_get_last();
+        throw new Exception("Unable to copy { $src } to {$dst} \n $err");
+      }
 
 
-    $src =  $tmp . $senior_csv;
-    $dst =  $organogram_file_location .   $senior_csv;
-    if (!copy ( $src, $dst)){
-      $err = error_get_last();
-      throw new Exception("Unable to copy { $src } to {$dst} \n $err");
+      $src =  $tmp . $senior_csv;
+      $dst =  $organogram_file_location .   $senior_csv;
+      if (!copy ( $src, $dst)){
+        $err = error_get_last();
+        throw new Exception("Unable to copy { $src } to {$dst} \n $err");
+      }
+      $files_dir = conf_path() . '/files/' . $organogram_path;
+      $resource  = new stdClass;
+      $resource->package_id = $package['id'];
+      $resource->date = $organogram_date;
+
+    } catch (Exception $e) {
+      drupal_set_message("There was an exception while trying to process the organogram. " . $e->getMessage(), 'error');
+      return;
     }
-    $files_dir = conf_path() . '/files/' . $organogram_path;
-    $resource  = new stdClass;
-    $resource->package_id = $package['id'];
-    $resource->date = $organogram_date;
 
 
     try {
