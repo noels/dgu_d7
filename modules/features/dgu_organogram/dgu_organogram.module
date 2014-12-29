@@ -166,7 +166,9 @@ function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $fo
     if ($group) {
       $package = _dgu_organogram_get_organogram_package_for_publisher($group['name']);
       if ($package){
-        drupal_set_message("Click here to see the published <a href=\"/data/{$package['id']}\" >organogram dataset</a>");
+        $CkanUrl = substr_replace(variable_get('ckan_url', ''), '', -4) . "data/{$package['id']}";
+
+        drupal_set_message("Click here to see the published <a href=\"${CkanUrl}\" >organogram dataset</a>");
       }
     }
   } catch (Exception $e){
