@@ -52,12 +52,7 @@ function dgu_organogram_schema() {
   return $schema;
 }
 
-
 function dgu_organogram_update_1001() {
-  $schema = module_invoke('dgu_organogram', 'schema');
-  db_create_table('dgu_organogram', $schema['dgu_organogram']);
-}
-function dgu_organogram_update_1002() {
   $schema = module_invoke('dgu_organogram', 'schema');
   db_create_table('dgu_organogram', $schema['dgu_organogram']);
 }
