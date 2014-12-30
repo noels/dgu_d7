@@ -166,7 +166,7 @@ function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $fo
     if ($group) {
       $package = _dgu_organogram_get_organogram_package_for_publisher($group['name']);
       if ($package  && $package['state'] == 'active'){
-        $CkanUrl = substr_replace(variable_get('ckan_url', ''), '', -4) . "data/{$package['id']}";
+        $CkanUrl = substr_replace(variable_get('ckan_url', ''), '', -4) . "dataset/{$package['name']}";
 
         drupal_set_message("Click here to see the published <a href=\"${CkanUrl}\" >organogram dataset</a>");
       }
@@ -636,8 +636,8 @@ function dgu_organogram_organogram_publish($form, &$form_state){
   }
 
   $package = _dgu_organogram_get_organogram_package_for_publisher($group['name']);
+  $packageJson = _dgu_organogram_package_json($group);
   if (!$package) {
-      $packageJson = _dgu_organogram_package_json($group);
       try {
         $response = $client->PackageCreate(array('data'=>$packageJson));
         $createPackageResponse = $response->toArray();
@@ -648,7 +648,19 @@ function dgu_organogram_organogram_publish($form, &$form_state){
         return;
       }
   } else {
-    drupal_set_message("Package id: {$package['id']} updated.");
+    if ($package['state'] == 'deleted'){
+      try{
+        $package['name'] = uniqid('deleted_') . $package['name'];
+        $client->packageUpdate(array('data'=>json_encode($package)));
+        drupal_set_message("Deleted package id: {$package['id']} updated.");
+        $response = $client->PackageCreate(array('data'=>$packageJson));
+        $createPackageResponse = $response->toArray();
+        $package = $createPackageResponse['result'];
+        drupal_set_message("Package id: {$package['id']} created.");
+      } catch (Exception $e){
+        drupal_set_message("An error ocurred while trying to update an organogram dataset. " . $e->getMessage(), 'error');
+      }
+    }
   }
 
   //Ensure that we have a valid file fid before carrying on.
