@@ -762,10 +762,15 @@ function _dgu_organogram_find_resource_id($resources, $format, $organogram_date,
   $resource_id = FALSE;
   foreach ($resources as $resource) {
     //because for inexpicable reasons, CKAN sometimes has a different date format,
-    if (strstr($resource['date'], '/')){
-      $date1 = DateTime::createFromFormat ('d/m/Y', $resource['date']);
-    } else {
-      $date1 = DateTime::createFromFormat ('d-m-Y', $resource['date']);
+    // and sometimes not at all.
+    $date1 = DateTime::createFromFormat ('d-m-Y', $organogram_date);
+    if (!empty($resource['date'])) {
+      if (strstr($resource['date'], '/')) {
+        $date1 = DateTime::createFromFormat('d/m/Y', $resource['date']);
+      }
+      else {
+        $date1 = DateTime::createFromFormat('d-m-Y', $resource['date']);
+      }
     }
     $date2 = DateTime::createFromFormat ('d-m-Y', $organogram_date);
     if ($resource['format'] == $format &&  $date1->diff($date2)->days < 1) {
