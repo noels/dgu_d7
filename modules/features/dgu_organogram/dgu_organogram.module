@@ -711,13 +711,13 @@ function dgu_organogram_organogram_publish($form, &$form_state){
       //$resource->format = 'XLS';
       //$resource->description = 'Organogram - XLS data';
       //_dgu_organogram_create_or_update_resource($package, $resource, $organogram_date, 'XML');
-
-      $resource->url = 'http://data.gov.uk/' . $files_dir . $junior_csv;
+      global $base_url;
+      $resource->url = $base_url . '/' . $files_dir . $junior_csv;
       $resource->format = 'CSV';
       $resource->description = 'Organogram - Junior CSV data';
       _dgu_organogram_create_or_update_resource($package, $resource, $organogram_date, 'Junior');
 
-      $resource->url = 'http://data.gov.uk/' . $files_dir . $senior_csv;
+      $resource->url = $base_url . '/' . $files_dir . $senior_csv;
       $resource->format = 'CSV';
       $resource->description = 'Organogram - Senior CSV data';
       _dgu_organogram_create_or_update_resource($package, $resource, $organogram_date, 'Senior');
