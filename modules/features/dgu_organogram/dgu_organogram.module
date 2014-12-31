@@ -695,7 +695,7 @@ function dgu_organogram_organogram_publish($form, &$form_state){
         $err = error_get_last();
         throw new Exception("Unable to copy { $src } to {$dst} \n $err");
       }
-      $files_dir = conf_path() . '/files/' . $organogram_path;
+      $files_dir = conf_path() . '/files' . $organogram_path;
       $resource  = new stdClass;
       $resource->package_id = $package['id'];
       $resource->date = $organogram_date;
