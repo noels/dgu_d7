@@ -177,20 +177,20 @@ function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $fo
 
   $form['#attached']['js'][] = array(
     'data' => '(function($) {
-    Drupal.behaviors.fileUpload = {
-    attach: function(context, settings) {
-        jQuery("body").ajaxComplete(function(event,request, settings){
-            if(window.location.pathname.match(/ckan_publisher\/\d+\/edit/)) {
-                form_build_id = "ckan-publisher-form";
-                //jQuery("#"+form_build_id).find("[id^=edit-submit]").click()
-            }
-        });
-    }
-}
+      Drupal.behaviors.fileUpload = {
+        attach: function(context, settings) {
+            jQuery("body").ajaxComplete(function(event,request, settings){
+                if(window.location.pathname.match(/ckan_publisher\/\d+\/edit/)) {
+                    form_build_id = "ckan-publisher-form";
+                    //jQuery("#"+form_build_id).find("[id^=edit-submit]").click()
+                }
+            });
+        }
+      }
 
       Drupal.behaviors.standardNodeForm = {
         attach: function (context, settings) {
-       //   alert("attaching");
+          //   alert("attaching");
         }
       }
     })(jQuery);
