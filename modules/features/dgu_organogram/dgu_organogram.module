@@ -421,10 +421,11 @@ function dgu_organogram_after($element, $form_state){
       ),
     );
 
-    $link_text = "Uploaded " . date('d-m-Y H:i:s', $element['#file']->timestamp);
+    $organogram_date = $form_state['organogram_dates'][$element['#file']->fid];
+    $organogram_link_text = "Organogram date " . date('d-m-Y', $organogram_date);
     $options['attributes']['title'] = check_plain($file->filename);
-
-    $element['filename']['#markup'] = '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
+    $element['filename']['#markup'] = '<span class="file">' . $icon . ' ' . l($organogram_link_text, $url, $options) . '</span>';
+    $element['filename']['#markup'] .= '<span class="uploaded">' . "Uploaded " . date('d-m-Y H:i:s', $element['#file']->timestamp) ."</span>";
 
     $published = FALSE;
     if (!empty($form_state['publish_dates'][$element['#file']->fid])){
@@ -441,6 +442,9 @@ function dgu_organogram_after($element, $form_state){
       $element['filename']['#markup'] .= "<span class='signoff_date'>Signed off: ". date('d-m-Y', $signoff) . "<span> ";
     }
     $btnName = "preview_organogram_{$element['#language']}_{$element['#file']->fid}_button";
+    $element['buttons'] = array(
+
+    );
     $element['preview'] = array(
       '#name' => $btnName,
       '#type' => 'button',

@@ -817,3 +817,16 @@ a.categorydata:hover
 }
 
 #live-link a {color: #fff; text-decoration: underline;}
+
+#edit-field-organogram-und span {
+    display: block;
+}
+#edit-field-organogram-und span.file a {
+    color: #000;
+    font-weight: bold;
+}
+#edit-field-organogram-und td span.buttons {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
