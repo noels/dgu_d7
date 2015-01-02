@@ -424,7 +424,7 @@ function dgu_organogram_after($element, $form_state){
     $organogram_date = $form_state['organogram_dates'][$element['#file']->fid];
     $organogram_link_text = "Organogram date " . date('d-m-Y', $organogram_date);
     $options['attributes']['title'] = check_plain($file->filename);
-    $element['filename']['#markup'] = '<span class="file">' . $icon . ' ' . l($organogram_link_text, $url, $options) . '</span>';
+    $element['filename']['#markup'] = '<span class="file"> ' . l($organogram_link_text, $url, $options) . '</span>';
     $element['filename']['#markup'] .= '<span class="uploaded">' . "Uploaded " . date('d-m-Y H:i:s', $element['#file']->timestamp) ."</span>";
 
     $published = FALSE;
