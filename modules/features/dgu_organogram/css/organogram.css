@@ -825,8 +825,6 @@ a.categorydata:hover
     color: #000;
     font-weight: bold;
 }
-#edit-field-organogram-und td span.buttons {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+#edit-field-organogram-und td{
+    vertical-align: inherit;
 }
