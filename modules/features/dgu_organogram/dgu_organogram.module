@@ -425,14 +425,14 @@ function dgu_organogram_after($element, $form_state){
     $organogram_link_text = "Organogram date " . date('d-m-Y', $organogram_date);
     $options['attributes']['title'] = check_plain($file->filename);
     $element['filename']['#markup'] = '<span class="file"> ' . l($organogram_link_text, $url, $options) . '</span>';
-    $element['filename']['#markup'] .= '<span class="uploaded">' . "Uploaded " . date('d-m-Y H:i:s', $element['#file']->timestamp) ."</span>";
+    $element['filename']['#markup'] .= '<span class="file uploaded">' . "Uploaded " . date('d-m-Y H:i:s', $element['#file']->timestamp) ."</span>";
 
     $published = FALSE;
     if (!empty($form_state['publish_dates'][$element['#file']->fid])){
       $published = $form_state['publish_dates'][$element['#file']->fid];
     }
     if ($published){
-      $element['filename']['#markup'] .= "<span class='published_date'>Published: ". date('d-m-Y', $published) . "<span> ";
+      $element['filename']['#markup'] .= "<span class='file published_date'>Published: ". date('d-m-Y', $published) . "<span> ";
     }
     $signoff = FALSE;
     if (!empty($form_state['signoff_dates'][$element['#file']->fid])){
