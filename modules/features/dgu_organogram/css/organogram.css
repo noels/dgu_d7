@@ -818,7 +818,11 @@ a.categorydata:hover
 
 #live-link a {color: #fff; text-decoration: underline;}
 
-#edit-field-organogram-und span {
+.file-widget.form-managed-file.clearfix.input-group {
+    margin: 0 auto;
+    width: 60%;
+}
+#edit-field-organogram-und span.file {
     display: block;
 }
 #edit-field-organogram-und span.file a {
