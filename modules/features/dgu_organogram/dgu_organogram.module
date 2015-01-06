@@ -101,7 +101,8 @@ function _dgu_organogram_generate_csv_files($fid) {
     error_log(print_r($output, TRUE));
     throw new Exception ("There was an error: \n" . print_r($output, TRUE));
   }
-    preg_match("/([^:]*:\ )(.*)/i", $output[5], $matches);
+  $str = implode("\n", $output);
+  preg_match("/(Writing index file:\ )(.*)/", $str, $matches);
   return $matches[2];
 }
 
@@ -239,7 +240,7 @@ function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $fo
 function dgu_organogram_form_submit($form, &$form_state){
   $parents = $form_state['triggering_element']['#array_parents'];
   $button_key = array_pop($parents);
-  if ('submit' == $button_key){
+  if ('submit' == $button_key) {
     form_state_values_clean($form_state);
     $files_count = count($form_state['values']['field_organogram'][LANGUAGE_NONE]);
     if (!$form_state['values']['field_organogram'][LANGUAGE_NONE][$files_count -1]['fid']){
@@ -480,6 +481,7 @@ function dgu_organogram_after($element, $form_state){
       'type' => 'setting',
     );
     $element['remove_button']['#weight'] = 10;
+    $element['remove_button']['#submit'][] = 'dgu_organogram_organogram_unpublish';
     $deadline_date = 0;
     if (!empty($form_state['organogram_dates'][$element['#file']->fid])) {
       $deadline_date = $form_state['organogram_dates'][$element['#file']->fid];
@@ -618,7 +620,13 @@ function dgu_organogram_organogram_signoff($form, &$form_state){
   } else {
     db_query("UPDATE dgu_organogram SET signoff_date = " . time() .  " where fid = " . $fid);
   }
+}
 
+function dgu_organogram_organogram_unpublish($form, &$form_state){
+  $fid = $form_state['triggering_element']['#attributes']['data-file-fid'];
+  if (!empty($form_state['organogram_dates'][$fid])){
+    drupal_set_message('unpublishing resource from ckan.');
+  }
 }
 
 
