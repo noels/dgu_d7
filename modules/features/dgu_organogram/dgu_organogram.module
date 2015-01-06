@@ -699,7 +699,6 @@ function dgu_organogram_organogram_publish($form, &$form_state){
         $err = error_get_last();
         throw new Exception("Unable to copy { $src } to {$dst} \n $err");
       }
-      $files_dir = conf_path() . '/files' . $organogram_path;
       $resource  = new stdClass;
       $resource->package_id = $package['id'];
       $resource->date = $organogram_date;
@@ -715,13 +714,14 @@ function dgu_organogram_organogram_publish($form, &$form_state){
       //$resource->format = 'XLS';
       //$resource->description = 'Organogram - XLS data';
       //_dgu_organogram_create_or_update_resource($package, $resource, $organogram_date, 'XML');
-      global $base_url;
-      $resource->url = $base_url . '/' . $files_dir . $junior_csv;
+      $uri = 'public://' . $organogram_path . $junior_csv;
+      $resource->url = file_create_url($uri);
       $resource->format = 'CSV';
       $resource->description = 'Organogram - Junior CSV data';
       _dgu_organogram_create_or_update_resource($package, $resource, $organogram_date, 'Junior');
 
-      $resource->url = $base_url . '/' . $files_dir . $senior_csv;
+      $uri = 'public://' . $organogram_path . $senior_csv;
+      $resource->url = file_create_url($uri);
       $resource->format = 'CSV';
       $resource->description = 'Organogram - Senior CSV data';
       _dgu_organogram_create_or_update_resource($package, $resource, $organogram_date, 'Senior');
