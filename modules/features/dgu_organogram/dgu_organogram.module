@@ -482,6 +482,8 @@ function dgu_organogram_after($element, $form_state){
     );
     $element['remove_button']['#weight'] = 10;
     $element['remove_button']['#submit'][] = 'dgu_organogram_organogram_unpublish';
+    $element['remove_button']['#attributes']['data-file-fid'] =  $element['#file']->fid?:0;
+
     $deadline_date = 0;
     if (!empty($form_state['organogram_dates'][$element['#file']->fid])) {
       $deadline_date = $form_state['organogram_dates'][$element['#file']->fid];
