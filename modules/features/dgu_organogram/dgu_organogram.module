@@ -628,6 +628,25 @@ function dgu_organogram_organogram_unpublish($form, &$form_state){
   $fid = $form_state['triggering_element']['#attributes']['data-file-fid'];
   if (!empty($form_state['organogram_dates'][$fid])){
     drupal_set_message('unpublishing resource from ckan.');
+    $group = _dgu_organogram_get_ckan_group($form['ckan_id']['#value']);
+    if (!$group) {
+      drupal_set_message("Unable to unpublish organogram. Group not found group id: " . $form['ckan_id']['#value'] );
+      return;
+    }
+
+    $package = _dgu_organogram_get_organogram_package_for_publisher($group['name']);
+    $packageJson = _dgu_organogram_package_json($group);
+    if ($package) {
+      try{
+        foreach($package->resources as $resource) {
+          //$response = $client->resourceUpdate(array('data'=>$resource));
+          $updateResourceResponse = $response->toArray();
+          drupal_set_message("Resource id: {$resource['id']} created.");
+        }
+      } catch (Exception $e){
+        drupal_set_message("An error ocurred while trying to unpublish a resource. " . $e->getMessage(), 'error');
+      }
+    }
   }
 }
 
