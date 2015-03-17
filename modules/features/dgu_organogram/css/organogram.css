@@ -58,7 +58,6 @@ form#ckan-publisher-form #edit-submit,  form#ckan-publisher-form #edit-cancel {
 }
 .field-name-field-organogram table.table {
     margin: 0 auto;
-    width: inherit; /* override 100% table width */
 }
 div.chart {
     position: relative;
