@@ -17,7 +17,7 @@ Feature: Create new forum topic as a site user
     And I should see the link "Login to take part in forums »"
     And search result counter should match "^\d* Forum topics$"
     And view "panel_pane_latest_forum" view should have "6" rows
-    And pager in "panel_pane_latest_forum" view should match "^1 2 3 … »$"
+    And I should see the link "See all"
 
   @anon
   Scenario: View the latest forum topics RSS
@@ -63,7 +63,7 @@ Feature: Create new forum topic as a site user
       | Forum      |
       | Categories |
     And search result counter should match "^\d* Forum topics$"
-    And view "forum_categories_block" view should have "10" rows
+    And view "forum_categories_block" view should have "9" rows
     And row "1" of "forum_categories_block" view should match "^General discussion"
     And row "1" of "forum_categories_block" view should match "\d* topics \d* replies$"
     And I should see the link "Login to take part in forums »"
@@ -85,7 +85,7 @@ Feature: Create new forum topic as a site user
     And I should see "GENERAL DISCUSSION" pane in "first" column in "second" row
     And I should see "FORUM CATEGORIES" pane in "last" column in "second" row
     And row "1" of "block_1" view should match "^General Discussion \d* topics"
-    And view "block_1" view should have "10" rows
+    And view "block_1" view should have "9" rows
     And view "panel_pane_category_forum" view should have "6" rows
     And "title" field in row "1" of "panel_pane_category_forum" view should match "^\w*"
     And  "name" field in row "1" of "panel_pane_category_forum" view should match "^Created by \w*|\w* (\d* \w* \d* \w* ago|\d* \w* ago)"

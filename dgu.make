@@ -52,18 +52,15 @@ projects[admin_menu][subdir] = "contrib"
 projects[module_filter][version] = "1.7"
 projects[module_filter][subdir] = "contrib"
 
-projects[ctools][version] = "1.3"
+projects[ctools][version] = "1.6"
 projects[ctools][subdir] = "contrib"
-# Patch prevents ctools from running filter_xss_admin on an un-rendered array.
-projects[ctools][patch][] = "http://drupal.org/files/ctools-1925018-61.patch"
 
 projects[features][version] = "2.0"
 projects[features][subdir] = "contrib"
 projects[features][patch][] = "http://raw.github.com/datagovuk/dgu_d7/master/patches/features_dont_convert_strings_to_integers.patch"
 
-projects[views][version] = "3.7"
+projects[views][version] = "3.8"
 projects[views][subdir] = "contrib"
-projects[views][patch][] = "http://drupal.org/files/views-1511396-110-array_diff_recursive.patch"
 
 projects[views_data_export][version] = "3.0-beta6"
 projects[views_data_export][subdir] = "contrib"
@@ -90,8 +87,8 @@ projects[reply][download][type] = "git"
 projects[reply][download][url] = "http://git.drupal.org/project/reply.git"
 projects[reply][download][revision] = "7012839b9eb828f089f2cee02f6e719308eb1569"
 projects[reply][subdir] = "contrib"
-#projects[reply][patch][] = "http://drupal.org/files/issues/reply_mollom_integration_2.patch"
 #projects[reply][patch][] = "http://raw.github.com/ratajczak/dgu_d7/master/patches/reply_bundle_filter.patch"
+#projects[reply][patch][] = "http://drupal.org/files/issues/reply_mollom_integration_2.patch"
 
 projects[rules][version] = "2.3"
 projects[rules][subdir] = "contrib"
@@ -109,7 +106,7 @@ projects[field_replies][subdir] = "contrib"
 projects[field_permissions][version] = "1.0-beta2"
 projects[field_permissions][subdir] = "contrib"
 
-projects[entityreference][version] = "1.0"
+projects[entityreference][version] = "1.1"
 projects[entityreference][subdir] = "contrib"
 
 projects[migrate][type] = "module"
@@ -139,7 +136,7 @@ projects[lexicon][subdir] = "contrib"
 projects[file_entity][version] = "2.0-alpha3"
 projects[file_entity][subdir] = "contrib"
 
-projects[media][version] = "2.0-alpha3"
+projects[media][version] = "2.0-alpha4"
 projects[media][subdir] = "contrib"
 
 projects[votingapi][version] = "2.10"
@@ -165,7 +162,7 @@ projects[conditional_fields][download][revision] = "cd29b003a592d375f3fdb4c46f56
 projects[conditional_fields][patch][] = "http://drupal.org/files/issues/conditional_fields-jquery_update_1.7_states_incompatible-1815896.patch"
 projects[conditional_fields][subdir] = "contrib"
 
-projects[logintoboggan][version] = "1.3"
+projects[logintoboggan][version] = "1.4"
 projects[logintoboggan][subdir] = "contrib"
 projects[logintoboggan][patch][] = "http://drupal.org/files/logintoboggin-unified-form-validation-errors-1163172-13.patch"
 
@@ -197,10 +194,10 @@ projects[fieldable_panels_panes][subdir] = "contrib"
 projects[context][version] = "3.0-beta7"
 projects[context][subdir] = "contrib"
 
-projects[services][version] = "3.5"
+projects[services][version] = "3.11"
 projects[services][subdir] = "contrib"
 
-projects[services_views][version] = "1.0-beta2"
+projects[services_views][version] = "1.0"
 projects[services_views][subdir] = "contrib"
 
 projects[smtp][version] = "1.0"
@@ -212,20 +209,23 @@ projects[libraries][subdir] = "contrib"
 projects[wysiwyg][type] = "module"
 projects[wysiwyg][download][type] = "git"
 projects[wysiwyg][download][url] = "http://git.drupal.org/project/wysiwyg.git"
-projects[wysiwyg][download][revision] = "31840cbfd1386f4ce138d74f4d6878a1cfe31d2c"
+projects[wysiwyg][download][revision] = "898d022cf7d0b6c6a6e7d813199d561b4ad39f8b"
 projects[wysiwyg][subdir] = "contrib"
 
-projects[redirect][version] = "1.0-rc1"
+projects[redirect][type] = "module"
+projects[redirect][download][type] = "git"
+projects[redirect][download][url] = "http://git.drupal.org/project/redirect.git"
+projects[redirect][download][revision] = "20542c13c3004adf495633836842a83b7f343892"
 projects[redirect][subdir] = "contrib"
-projects[redirect][patch][] = "http://raw.github.com/datagovuk/dgu_d7/master/patches/redirect_module_remove_oops_message.patch"
+projects[redirect][patch][] = "https://www.drupal.org/files/issues/fix_and_prevent-1796596-297.patch"
 
 projects[tagclouds][version] = "1.9"
 projects[tagclouds][subdir] = "contrib"
 
-projects[mollom][version] = "2.10"
+projects[mollom][version] = "2.13"
 projects[mollom][subdir] = "contrib"
 
-projects[google_analytics][version] = "2.0"
+projects[google_analytics][version] = "2.1"
 projects[google_analytics][subdir] = "contrib"
 
 projects[views_bulk_operations][version] = "3.1"
@@ -296,6 +296,9 @@ projects[contact_deeplink][subdir] = "contrib"
 
 projects[empty_fields][version] = "2.0"
 projects[empty_fields][subdir] = "contrib"
+
+projects[print][version] = "2.0"
+projects[print][subdir] = "contrib"
 
 ;TODO - lock to some revision
 projects[d3][subdir] = "contrib"

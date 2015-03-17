@@ -1,0 +1,102 @@
+<?php
+/**
+ * @file
+ * Code for the dgu_print feature.
+ */
+
+include_once 'dgu_print.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function dgu_print_menu() {
+  $items['print/header'] = array(
+    'page callback' => 'dgu_print_header',
+    'access callback' => TRUE,
+  );
+  $items['print/footer'] = array(
+    'page callback' => 'dgu_print_footer',
+    'access callback' => TRUE,
+  );
+  $items['print/cover'] = array(
+      'page callback' => 'dgu_print_cover',
+      'access callback' => TRUE,
+  );
+  return $items;
+}
+
+function dgu_print_header() {
+  $title = $_GET['title'];
+print <<<EOT
+<!DOCTYPE html><html>
+  <body style="position: relative;">
+    <div style="display: block; width: 100%; height: 100px; position: absolute; top: 0; left: 0; border-bottom: 1px solid #000; ">
+      <img style="position: relative;
+  top: 50%;
+  transform: translateY(-50%);" src="/assets/img/dgu-header-cropped.png" />
+      <div style="position: absolute; top: ${margin_top}px; right: 0; width: 80%; text-align: right;"><strong>$title</strong></div>
+    </div>
+  </body>
+</html>
+EOT;
+}
+
+function dgu_print_footer() {
+  $url = $_GET['link'];
+  $updated = $_GET['updated'];
+  $page = $_GET['page'];
+  $total = $_GET['topage'];
+   print <<<EOT
+<!DOCTYPE html><html>
+  <head>
+    <style>
+      table {border-top: 1px solid #000;}
+    </style>
+  </head>
+  <body>
+    <div>
+      <table style="width: 100%;">
+        <tr>
+          <td>Updated on $updated</td>
+          <td style="text-align: right;">page $page of $total</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
+EOT;
+}
+function dgu_print_cover() {
+  $title = $_GET['title'];
+  print <<<EOT
+<!DOCTYPE html><html>
+  <head>
+    <style>
+      body {
+        color: #000;
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica;
+      }
+      h1 {
+        font-size: 25px;
+        padding-top: 5px;
+      }
+      .centered{
+        margin: auto;
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body style="position: relative;">
+    <img src="/assets/img/dgu-header-cropped.png" />
+    <div style="
+        margin: auto;
+        width: 400px;" class="centered">
+      <h1>$title</h1>
+    </div>
+  </body>
+</html>
+EOT;
+}
+
+
+

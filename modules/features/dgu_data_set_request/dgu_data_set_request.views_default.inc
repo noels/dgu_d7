@@ -768,6 +768,7 @@ function dgu_data_set_request_views_default_views() {
     'field_assignee' => 'field_assignee',
     'field_publisher_ref' => 'field_publisher_ref',
     'field_publisher_assignee' => 'field_publisher_assignee',
+    'ops' => 'ops',
     'edit_node' => 'edit_node',
   );
   $handler->display->display_options['style_options']['default'] = 'changed';
@@ -835,6 +836,11 @@ function dgu_data_set_request_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'ops' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'edit_node' => array(
       'align' => '',
       'separator' => '',
@@ -859,6 +865,13 @@ function dgu_data_set_request_views_default_views() {
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = 'There are no data requests matching your filter criteria';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Flags: subscribe_node */
+  $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
+  $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
+  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'subscribe_node';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
@@ -952,6 +965,17 @@ function dgu_data_set_request_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = 'Actions';
+  $handler->display->display_options['fields']['edit_node']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['edit_node']['alter']['text'] = '[edit_node][ops]';
+  /* Field: Flags: Flag link */
+  $handler->display->display_options['fields']['ops']['id'] = 'ops';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
+  $handler->display->display_options['fields']['ops']['field'] = 'ops';
+  $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['ops']['label'] = 'Actions';
+  $handler->display->display_options['fields']['ops']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['ops']['alter']['text'] = '[ops][edit_node]';
+  $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
@@ -1846,6 +1870,7 @@ function dgu_data_set_request_views_default_views() {
   $handler->display->display_options['access']['role'] = array(
     3 => '3',
     10 => '10',
+    12 => '12',
     11 => '11',
   );
   $handler->display->display_options['cache']['type'] = 'none';
@@ -1867,13 +1892,9 @@ function dgu_data_set_request_views_default_views() {
   $handler->display->display_options['fields']['counter']['table'] = 'views';
   $handler->display->display_options['fields']['counter']['field'] = 'counter';
   $handler->display->display_options['fields']['counter']['label'] = '';
+  $handler->display->display_options['fields']['counter']['exclude'] = TRUE;
   $handler->display->display_options['fields']['counter']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['counter']['counter_start'] = '1';
-  /* Field: Content: Nid */
-  $handler->display->display_options['fields']['nid']['id'] = 'nid';
-  $handler->display->display_options['fields']['nid']['table'] = 'node';
-  $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  $handler->display->display_options['fields']['nid']['label'] = 'ID';
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
@@ -1917,6 +1938,7 @@ function dgu_data_set_request_views_default_views() {
   $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
   $handler->display->display_options['fields']['field_first_name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['field_first_name']['label'] = 'First name';
+  $handler->display->display_options['fields']['field_first_name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_first_name']['settings'] = array(
     'field_replies' => '',
@@ -1930,6 +1952,9 @@ function dgu_data_set_request_views_default_views() {
   $handler->display->display_options['fields']['field_surname']['table'] = 'field_data_field_surname';
   $handler->display->display_options['fields']['field_surname']['field'] = 'field_surname';
   $handler->display->display_options['fields']['field_surname']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_surname']['label'] = 'Real name';
+  $handler->display->display_options['fields']['field_surname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_surname']['alter']['text'] = '[field_first_name] [field_surname]';
   $handler->display->display_options['fields']['field_surname']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_surname']['settings'] = array(
     'field_replies' => '',
@@ -2052,6 +2077,17 @@ function dgu_data_set_request_views_default_views() {
       'field_replies_revision' => '',
     ),
   );
+  /* Field: Content: Outcome */
+  $handler->display->display_options['fields']['field_review_outcome']['id'] = 'field_review_outcome';
+  $handler->display->display_options['fields']['field_review_outcome']['table'] = 'field_data_field_review_outcome';
+  $handler->display->display_options['fields']['field_review_outcome']['field'] = 'field_review_outcome';
+  $handler->display->display_options['fields']['field_review_outcome']['settings'] = array(
+    'field_replies' => '',
+    'field_replies_settings' => array(
+      'field_replies_reply_field_name' => '',
+      'field_replies_revision' => '',
+    ),
+  );
   /* Field: Content: Publication preference */
   $handler->display->display_options['fields']['field_publication_preference']['id'] = 'field_publication_preference';
   $handler->display->display_options['fields']['field_publication_preference']['table'] = 'field_data_field_publication_preference';
@@ -2096,6 +2132,11 @@ function dgu_data_set_request_views_default_views() {
       'field_replies_revision' => '',
     ),
   );
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'ID';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -2640,6 +2681,20 @@ function dgu_data_set_request_views_default_views() {
   /* Display: Latest dataset requests */
   $handler = $view->new_display('block', 'Latest dataset requests', 'latest_dataset_requests');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['use_more'] = FALSE;
+  $handler->display->display_options['use_more'] = TRUE;
+  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
+  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['defaults']['use_more_text'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'See all';
+  $handler->display->display_options['defaults']['link_display'] = FALSE;
+  $handler->display->display_options['link_display'] = 'custom_url';
+  $handler->display->display_options['link_url'] = 'search/everything/?f[0]=bundle:dataset_request';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['header'] = FALSE;
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
