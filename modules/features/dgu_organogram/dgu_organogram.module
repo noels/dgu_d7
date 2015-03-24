@@ -164,7 +164,7 @@ function dgu_organogram_form_ckan_publisher_form_alter(&$form, &$form_state, $fo
     $dates = $result->fetchAllKeyed();
     $form_state['signoff_dates'] = $dates;
     $group = _dgu_organogram_get_ckan_group($form['ckan_id']['#value']);
-    if ($group) {
+    if ($group && !empty($form_state['publish_dates'])) {
       $package = _dgu_organogram_get_organogram_package_for_publisher($group['name']);
       if ($package  && $package['state'] == 'active'){
         $CkanUrl = substr_replace(variable_get('ckan_url', ''), '', -4) . "dataset/{$package['name']}";
