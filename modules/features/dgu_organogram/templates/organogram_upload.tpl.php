@@ -14,11 +14,12 @@
     Download organogram guidance</a>
   </div>
   <div>
+    <a href="http://data.gov.uk/sites/default/files/Organogram%20Visualisation%20Tool%20v1.0_10.pdf" >
     <i class="icon-3x icon-file-text"></i>
           <span class="format-name">
               PDF
           </span>
-    Download how to use this tool
+    Download how to use this tool</a>
   </div>
 </div>
 <?php print drupal_render_children($form) ?>
